@@ -1,0 +1,7 @@
+{
+  "modules": {
+    "JS.Abp.DynamicMenu": {
+      "path": "JS.Abp.DynamicMenu.abpmdl.json"
+    }
+  }
+}

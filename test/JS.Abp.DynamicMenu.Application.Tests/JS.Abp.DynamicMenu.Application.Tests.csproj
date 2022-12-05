@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\common.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace>JS.Abp.DynamicMenu</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\JS.Abp.DynamicMenu.Application\JS.Abp.DynamicMenu.Application.csproj" />
+    <ProjectReference Include="..\JS.Abp.DynamicMenu.Domain.Tests\JS.Abp.DynamicMenu.Domain.Tests.csproj" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,498 @@
+@page "/menu-items"
+@page "/menu-items/{DetailId:guid}"
+@attribute [Authorize(DynamicMenuPermissions.MenuItems.Default)]
+@using JS.Abp.DynamicMenu.MenuItems
+@using JS.Abp.DynamicMenu.Localization
+@using JS.Abp.DynamicMenu.Shared
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Localization
+@using Microsoft.AspNetCore.Components.Web
+@using Blazorise
+@using Blazorise.Components
+@using Blazorise.DataGrid
+@using Volo.Abp.BlazoriseUI
+@using Volo.Abp.BlazoriseUI.Components
+@using Volo.Abp.ObjectMapping
+@using Volo.Abp.AspNetCore.Components.Messages
+@using Volo.Abp.AspNetCore.Components.Web.Theming.Layout
+@using JS.Abp.DynamicMenu.Permissions
+@using Microsoft.AspNetCore.Components
+@using Volo.Abp.AspNetCore.Components.Web
+@using Volo.Abp.Http.Client
+@inherits DynamicMenuComponentBase
+@inject IMenuItemsAppService MenuItemsAppService
+@inject IUiMessageService UiMessageService
+@inject IRemoteServiceConfigurationProvider RemoteServiceConfigurationProvider
+@inject NavigationManager NavigationManager
+
+@* ************************* PAGE HEADER ************************* *@
+<PageHeader Title="@MenuName" BreadcrumbItems="BreadcrumbItems" Toolbar="Toolbar">
+
+</PageHeader>
+
+@* ************************* SEARCH ************************* *@
+<Card>
+    <CardBody>
+        <Form id="MenuItemSearchForm" class="mb-3">
+            <Addons>
+                <Addon AddonType="AddonType.Body">
+                    <TextEdit @bind-Text="@Filter.FilterText"
+                              Autofocus="true"
+                              Placeholder="@L["Search"]">
+                    </TextEdit>
+                </Addon>
+                <Addon AddonType="AddonType.End">
+                    <SubmitButton Form="MenuItemSearchForm" Clicked="GetMenuItemsAsync">
+                        <Icon Name="IconName.Search" Class="me-1"></Icon>@L["Search"]
+                    </SubmitButton>
+                </Addon>
+            </Addons>
+        </Form>
+    </CardBody>
+</Card>
+
+@* ************************* DATA GRID ************************* *@
+<Card>
+    <CardBody>
+        <DataGrid TItem="MenuItemWithNavigationPropertiesDto"
+                  Data="MenuItemList"
+                  ReadData="OnDataGridReadAsync"
+                  TotalItems="TotalCount"
+                  ShowPager="true"
+                  Responsive="true"
+                  PageSize="PageSize">
+            <DataGridColumns>
+                <DataGridEntityActionsColumn TItem="MenuItemWithNavigationPropertiesDto" @ref="@EntityActionsColumn">
+                    <DisplayTemplate>
+                        <EntityActions TItem="MenuItemWithNavigationPropertiesDto" EntityActionsColumn="@EntityActionsColumn">
+                            <EntityAction TItem="MenuItemWithNavigationPropertiesDto"
+                                          Visible="@CanEditMenuItem"
+                                          Clicked="async () => await OpenEditMenuItemModalAsync(context)"
+                                          Text="@L["Edit"]"></EntityAction>
+                             <EntityAction TItem="MenuItemWithNavigationPropertiesDto"
+                                          Visible="@CanEditMenuItem"
+                                          Clicked="async () => await NavigateToSubPage(context.MenuItem.Id)"
+                                          Text="@L["EditSub"]"></EntityAction>
+                            <EntityAction TItem="MenuItemWithNavigationPropertiesDto"
+                                          Visible="@CanDeleteMenuItem"
+                                          Clicked="() => DeleteMenuItemAsync(context)"
+                                          ConfirmationMessage="@(()=> L["DeleteConfirmationMessage"])"
+                                          Text="@L["Delete"]"></EntityAction>
+                        </EntityActions>
+                    </DisplayTemplate>
+                </DataGridEntityActionsColumn>
+               
+              <DataGridColumn TItem="MenuItemWithNavigationPropertiesDto"
+                      Field="MenuItem.Name"
+                      Caption="@L["Name"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="MenuItemWithNavigationPropertiesDto"
+                      Field="MenuItem.DisplayName"
+                      Caption="@L["DisplayName"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="MenuItemWithNavigationPropertiesDto"
+                      Field="MenuItem.IsActive"
+                      Caption="@L["IsActive"]">
+                    <DisplayTemplate>
+                        @if (context.MenuItem.IsActive)
+                        {
+                            <Icon TextColor="TextColor.Success" Name="@IconName.Check" />
+                        }
+                        else
+                        {
+                            <Icon TextColor="TextColor.Danger" Name="@IconName.Times" />
+                        }
+                    </DisplayTemplate>
+              </DataGridColumn>
+
+
+              <DataGridColumn TItem="MenuItemWithNavigationPropertiesDto"
+                      Field="MenuItem.Url"
+                      Caption="@L["Url"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="MenuItemWithNavigationPropertiesDto"
+                      Field="MenuItem.Icon"
+                      Caption="@L["Icon"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="MenuItemWithNavigationPropertiesDto"
+                      Field="MenuItem.Order"
+                      Caption="@L["Order"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="MenuItemWithNavigationPropertiesDto"
+                      Field="MenuItem.Target"
+                      Caption="@L["Target"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="MenuItemWithNavigationPropertiesDto"
+                      Field="MenuItem.ElementId"
+                      Caption="@L["ElementId"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="MenuItemWithNavigationPropertiesDto"
+                      Field="MenuItem.CssClass"
+                      Caption="@L["CssClass"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="MenuItemWithNavigationPropertiesDto"
+                      Field="MenuItem.Permission"
+                      Caption="@L["Permission"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="MenuItemWithNavigationPropertiesDto"
+                      Field="MenuItem.ResourceTypeName"
+                      Caption="@L["ResourceTypeName"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="MenuItemWithNavigationPropertiesDto"
+                      Field="MenuItem1.DisplayName"
+                      Caption="@L["Parent"]">
+              </DataGridColumn>
+
+            </DataGridColumns>
+        </DataGrid>
+    </CardBody>
+</Card>
+
+@* ************************* CREATE MODAL ************************* *@
+<Modal @ref="CreateMenuItemModal" Closing="@CreateMenuItemModal.CancelClosingModalWhenFocusLost">
+    <ModalContent Centered="true">
+        <Form id="CreateMenuItemForm">
+            <ModalHeader>
+                <ModalTitle>@L["NewMenuItem"]</ModalTitle>
+                <CloseButton Clicked="CloseCreateMenuItemModalAsync" />
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="@NewMenuItemValidations"
+                            Mode="ValidationMode.Auto"
+                            Model="@NewMenuItem"
+                            ValidateOnLoad="false">
+                     
+                    <Field>
+                        <FieldLabel>@L["MenuItem"]</FieldLabel>
+                        <Select TValue="Guid?" @bind-SelectedValue="@NewMenuItem.ParentId">
+                            <SelectItem TValue="Guid?" Value="null"></SelectItem>
+                            @foreach (var menuItem in MenuItemsNullable)
+                            {
+                                <SelectItem TValue="Guid?" Value="@menuItem.Id">
+                                    @menuItem.DisplayName
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+                    
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Name"] *</FieldLabel>
+                            <TextEdit @bind-Text="@NewMenuItem.Name" MaxLength="MenuItemConsts.NameMaxLength">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["DisplayName"] *</FieldLabel>
+                            <TextEdit @bind-Text="@NewMenuItem.DisplayName" MaxLength="MenuItemConsts.DisplayNameMaxLength">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Field>
+                        <Check TValue="bool" @bind-Checked="@NewMenuItem.IsActive">@L["IsActive"]</Check>
+                    </Field>
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Url"]</FieldLabel>
+                            <TextEdit @bind-Text="@NewMenuItem.Url" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Icon"]</FieldLabel>
+                            <TextEdit @bind-Text="@NewMenuItem.Icon" MaxLength="MenuItemConsts.IconMaxLength">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Order"]</FieldLabel>
+                            <NumericPicker TValue="int" @bind-Value="@NewMenuItem.Order"  Decimals="0">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Target"]</FieldLabel>
+                            <TextEdit @bind-Text="@NewMenuItem.Target" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["ElementId"]</FieldLabel>
+                            <TextEdit @bind-Text="@NewMenuItem.ElementId" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["CssClass"]</FieldLabel>
+                            <TextEdit @bind-Text="@NewMenuItem.CssClass" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Permission"]</FieldLabel>
+                            <TextEdit @bind-Text="@NewMenuItem.Permission" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["ResourceTypeName"]</FieldLabel>
+                            <TextEdit @bind-Text="@NewMenuItem.ResourceTypeName" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                   
+
+
+                    
+                    
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseCreateMenuItemModalAsync">
+                    @L["Cancel"]
+                </Button>
+                <SubmitButton Form="CreateMenuItemForm" Clicked="CreateMenuItemAsync" />
+            </ModalFooter>
+        </Form>
+    </ModalContent>
+</Modal>
+
+@* ************************* EDIT MODAL ************************* *@
+<Modal @ref="EditMenuItemModal" Closing="@EditMenuItemModal.CancelClosingModalWhenFocusLost">
+    <ModalContent Centered="true">
+        <Form id="EditMenuItemForm">
+            <ModalHeader>
+                <ModalTitle>@L["Update"]</ModalTitle>
+                <CloseButton Clicked="CloseEditMenuItemModalAsync" />
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="@EditingMenuItemValidations"
+                            Mode="ValidationMode.Auto"
+                            Model="@EditingMenuItem"
+                            ValidateOnLoad="false">
+
+
+                     <Field>
+                        <FieldLabel>@L["MenuItem"]</FieldLabel>
+                        <Select TValue="Guid?" @bind-SelectedValue="@EditingMenuItem.ParentId">
+                            <SelectItem TValue="Guid?" Value="null"></SelectItem>
+                            @foreach (var menuItem in MenuItemsNullable)
+                            {
+                                <SelectItem TValue="Guid?" Value="@menuItem.Id">
+                                    @menuItem.DisplayName
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+                    
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Name"] *</FieldLabel>
+                            <TextEdit @bind-Text="@EditingMenuItem.Name" MaxLength="MenuItemConsts.NameMaxLength">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["DisplayName"] *</FieldLabel>
+                            <TextEdit @bind-Text="@EditingMenuItem.DisplayName" MaxLength="MenuItemConsts.DisplayNameMaxLength">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Field>
+                        <Check TValue="bool" @bind-Checked="@EditingMenuItem.IsActive">@L["IsActive"]</Check>
+                    </Field>
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Url"]</FieldLabel>
+                            <TextEdit @bind-Text="@EditingMenuItem.Url" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Icon"]</FieldLabel>
+                            <TextEdit @bind-Text="@EditingMenuItem.Icon" MaxLength="MenuItemConsts.IconMaxLength">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Order"]</FieldLabel>
+                            <NumericPicker TValue="int" @bind-Value="@EditingMenuItem.Order"  Decimals="0">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Target"]</FieldLabel>
+                            <TextEdit @bind-Text="@EditingMenuItem.Target" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["ElementId"]</FieldLabel>
+                            <TextEdit @bind-Text="@EditingMenuItem.ElementId" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["CssClass"]</FieldLabel>
+                            <TextEdit @bind-Text="@EditingMenuItem.CssClass" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Permission"]</FieldLabel>
+                            <TextEdit @bind-Text="@EditingMenuItem.Permission" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["ResourceTypeName"]</FieldLabel>
+                            <TextEdit @bind-Text="@EditingMenuItem.ResourceTypeName" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                 
+
+
+                    
+                    
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseEditMenuItemModalAsync">
+                    @L["Cancel"]
+                </Button>
+                <SubmitButton Form="CreateMenuItemForm" Clicked="UpdateMenuItemAsync" />
+            </ModalFooter>
+        </Form>
+    </ModalContent>
+</Modal>

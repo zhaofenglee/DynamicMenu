@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <Import Project="..\..\common.props" />
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+        <RootNamespace>JS.Abp.DynamicMenu</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Volo.Abp.VirtualFileSystem" Version="$(VoloAbpPackageVersion)" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="..\..\JS.Abp.DynamicMenu.abpmdl.json" />
+      <EmbeddedResource Include="..\..\JS.Abp.DynamicMenu.abpmdl.json" />
+    </ItemGroup>
+
+</Project>

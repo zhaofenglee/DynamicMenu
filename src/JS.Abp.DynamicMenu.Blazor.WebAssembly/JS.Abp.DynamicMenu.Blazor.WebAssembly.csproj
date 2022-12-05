@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+    <Import Project="..\..\common.props" />
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="Volo.Abp.AspNetCore.Components.WebAssembly.Theming" Version="$(VoloAbpPackageVersion)" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\JS.Abp.DynamicMenu.Blazor\JS.Abp.DynamicMenu.Blazor.csproj" />
+        <ProjectReference Include="..\JS.Abp.DynamicMenu.HttpApi.Client\JS.Abp.DynamicMenu.HttpApi.Client.csproj" />
+    </ItemGroup>
+
+</Project>

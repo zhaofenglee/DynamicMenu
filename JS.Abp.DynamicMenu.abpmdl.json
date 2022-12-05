@@ -1,0 +1,111 @@
+{
+  "folders": {
+    "items": {
+      "src": {},
+      "test": {},
+      "host": {}
+    }
+  },
+  "packages": {
+    "JS.Abp.DynamicMenu.Domain.Shared": {
+      "path": "src/JS.Abp.DynamicMenu.Domain.Shared/JS.Abp.DynamicMenu.Domain.Shared.abppkg.json",
+      "folder": "src"
+    },
+    "JS.Abp.DynamicMenu.Domain": {
+      "path": "src/JS.Abp.DynamicMenu.Domain/JS.Abp.DynamicMenu.Domain.abppkg.json",
+      "folder": "src"
+    },
+    "JS.Abp.DynamicMenu.Application.Contracts": {
+      "path": "src/JS.Abp.DynamicMenu.Application.Contracts/JS.Abp.DynamicMenu.Application.Contracts.abppkg.json",
+      "folder": "src"
+    },
+    "JS.Abp.DynamicMenu.Application": {
+      "path": "src/JS.Abp.DynamicMenu.Application/JS.Abp.DynamicMenu.Application.abppkg.json",
+      "folder": "src"
+    },
+    "JS.Abp.DynamicMenu.EntityFrameworkCore": {
+      "path": "src/JS.Abp.DynamicMenu.EntityFrameworkCore/JS.Abp.DynamicMenu.EntityFrameworkCore.abppkg.json",
+      "folder": "src"
+    },
+    "JS.Abp.DynamicMenu.MongoDB": {
+      "path": "src/JS.Abp.DynamicMenu.MongoDB/JS.Abp.DynamicMenu.MongoDB.abppkg.json",
+      "folder": "src"
+    },
+    "JS.Abp.DynamicMenu.HttpApi": {
+      "path": "src/JS.Abp.DynamicMenu.HttpApi/JS.Abp.DynamicMenu.HttpApi.abppkg.json",
+      "folder": "src"
+    },
+    "JS.Abp.DynamicMenu.HttpApi.Client": {
+      "path": "src/JS.Abp.DynamicMenu.HttpApi.Client/JS.Abp.DynamicMenu.HttpApi.Client.abppkg.json",
+      "folder": "src"
+    },
+    "JS.Abp.DynamicMenu.TestBase": {
+      "path": "test/JS.Abp.DynamicMenu.TestBase/JS.Abp.DynamicMenu.TestBase.abppkg.json",
+      "folder": "test"
+    },
+    "JS.Abp.DynamicMenu.EntityFrameworkCore.Tests": {
+      "path": "test/JS.Abp.DynamicMenu.EntityFrameworkCore.Tests/JS.Abp.DynamicMenu.EntityFrameworkCore.Tests.abppkg.json",
+      "folder": "test"
+    },
+    "JS.Abp.DynamicMenu.MongoDB.Tests": {
+      "path": "test/JS.Abp.DynamicMenu.MongoDB.Tests/JS.Abp.DynamicMenu.MongoDB.Tests.abppkg.json",
+      "folder": "test"
+    },
+    "JS.Abp.DynamicMenu.Domain.Tests": {
+      "path": "test/JS.Abp.DynamicMenu.Domain.Tests/JS.Abp.DynamicMenu.Domain.Tests.abppkg.json",
+      "folder": "test"
+    },
+    "JS.Abp.DynamicMenu.Application.Tests": {
+      "path": "test/JS.Abp.DynamicMenu.Application.Tests/JS.Abp.DynamicMenu.Application.Tests.abppkg.json",
+      "folder": "test"
+    },
+    "JS.Abp.DynamicMenu.HttpApi.Host": {
+      "path": "host/JS.Abp.DynamicMenu.HttpApi.Host/JS.Abp.DynamicMenu.HttpApi.Host.abppkg.json",
+      "folder": "host"
+    },
+    "JS.Abp.DynamicMenu.Web": {
+      "path": "src/JS.Abp.DynamicMenu.Web/JS.Abp.DynamicMenu.Web.abppkg.json",
+      "folder": "src"
+    },
+    "JS.Abp.DynamicMenu.HttpApi.Client.ConsoleTestApp": {
+      "path": "test/JS.Abp.DynamicMenu.HttpApi.Client.ConsoleTestApp/JS.Abp.DynamicMenu.HttpApi.Client.ConsoleTestApp.abppkg.json",
+      "folder": "test"
+    },
+    "JS.Abp.DynamicMenu.Web.Host": {
+      "path": "host/JS.Abp.DynamicMenu.Web.Host/JS.Abp.DynamicMenu.Web.Host.abppkg.json",
+      "folder": "host"
+    },
+    "JS.Abp.DynamicMenu.AuthServer": {
+      "path": "host/JS.Abp.DynamicMenu.AuthServer/JS.Abp.DynamicMenu.AuthServer.abppkg.json",
+      "folder": "host"
+    },
+    "JS.Abp.DynamicMenu.Host.Shared": {
+      "path": "host/JS.Abp.DynamicMenu.Host.Shared/JS.Abp.DynamicMenu.Host.Shared.abppkg.json",
+      "folder": "host"
+    },
+    "JS.Abp.DynamicMenu.Web.Unified": {
+      "path": "host/JS.Abp.DynamicMenu.Web.Unified/JS.Abp.DynamicMenu.Web.Unified.abppkg.json",
+      "folder": "host"
+    },
+    "JS.Abp.DynamicMenu.Blazor": {
+      "path": "src/JS.Abp.DynamicMenu.Blazor/JS.Abp.DynamicMenu.Blazor.abppkg.json",
+      "folder": "src"
+    },
+    "JS.Abp.DynamicMenu.Blazor.Host": {
+      "path": "host/JS.Abp.DynamicMenu.Blazor.Host/JS.Abp.DynamicMenu.Blazor.Host.abppkg.json",
+      "folder": "host"
+    },
+    "JS.Abp.DynamicMenu.Blazor.Server": {
+      "path": "src/JS.Abp.DynamicMenu.Blazor.Server/JS.Abp.DynamicMenu.Blazor.Server.abppkg.json",
+      "folder": "src"
+    },
+    "JS.Abp.DynamicMenu.Blazor.WebAssembly": {
+      "path": "src/JS.Abp.DynamicMenu.Blazor.WebAssembly/JS.Abp.DynamicMenu.Blazor.WebAssembly.abppkg.json",
+      "folder": "src"
+    },
+    "JS.Abp.DynamicMenu.Blazor.Server.Host": {
+      "path": "host/JS.Abp.DynamicMenu.Blazor.Server.Host/JS.Abp.DynamicMenu.Blazor.Server.Host.abppkg.json",
+      "folder": "host"
+    }
+  }
+}

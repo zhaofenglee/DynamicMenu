@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\common.props" />
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>JS.Abp.DynamicMenu</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Volo.Abp.MongoDB" Version="$(VoloAbpPackageVersion)" />
+    <ProjectReference Include="..\JS.Abp.DynamicMenu.Domain\JS.Abp.DynamicMenu.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
