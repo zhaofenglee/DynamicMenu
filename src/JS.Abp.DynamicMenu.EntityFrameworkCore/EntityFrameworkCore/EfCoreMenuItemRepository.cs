@@ -11,9 +11,9 @@ using JS.Abp.DynamicMenu.MenuItems;
 
 namespace JS.Abp.DynamicMenu.EntityFrameworkCore
 {
-    public class EfCoreMenuItemRepository : EfCoreRepository<DynamicMenuDbContext, MenuItem, Guid>, IMenuItemRepository
+    public class EfCoreMenuItemRepository : EfCoreRepository<IDynamicMenuDbContext, MenuItem, Guid>, IMenuItemRepository
     {
-        public EfCoreMenuItemRepository(IDbContextProvider<DynamicMenuDbContext> dbContextProvider)
+        public EfCoreMenuItemRepository(IDbContextProvider<IDynamicMenuDbContext> dbContextProvider)
             : base(dbContextProvider)
         {
 
