@@ -78,7 +78,6 @@ public class DynamicMenuMenuContributor : IMenuContributor
             menuItem.Url,
             menuItem.Icon,
             menuItem.Order,
-            customData: null,
             menuItem.Target,
             menuItem.ElementId,
             menuItem.CssClass
@@ -92,7 +91,6 @@ public class DynamicMenuMenuContributor : IMenuContributor
            menuItem.Url,
            menuItem.Icon,
            menuItem.Order,
-           customData: null,
            menuItem.Target,
            menuItem.ElementId,
            menuItem.CssClass,
