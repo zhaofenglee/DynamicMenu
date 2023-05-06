@@ -6,12 +6,19 @@ using Microsoft.Extensions.Localization;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using NUglify.Helpers;
 using Volo.Abp.UI.Navigation;
 
 namespace JS.Abp.DynamicMenu.Blazor.Menus;
 
 public class DynamicMenuMenuContributor : IMenuContributor
 {
+    private readonly IConfiguration _configuration;
+    public DynamicMenuMenuContributor(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
     public async Task ConfigureMenuAsync(MenuConfigurationContext context)
     {
         if (context.Menu.Name == StandardMenus.Main)
@@ -42,18 +49,39 @@ public class DynamicMenuMenuContributor : IMenuContributor
     protected virtual async Task AddDynamicMenuManagementMenuItemAsync(MenuConfigurationContext context)
     {
         var l = context.GetLocalizer<DynamicMenuResource>();
-
-        var menuAppService = context.ServiceProvider.GetRequiredService<IMenuItemsAppService>();
-
-        var menuItems = await menuAppService.GetListAsync();
-
-        if (menuItems.Items.Count > 0)
+        var dynamicMenuEnabled = _configuration["App:DisableDynamicMenu"];
+        if (dynamicMenuEnabled.IsNullOrWhiteSpace() || bool.Parse(dynamicMenuEnabled))
         {
-            foreach (var menuItemDto in menuItems.Items.Where(x => x.ParentId == null && x.IsActive))
+            var menuAppService = context.ServiceProvider.GetRequiredService<IMenuItemsAppService>();
+
+            var menuItems = await menuAppService.GetListAsync();
+        
+            if (menuItems.Items.Count > 0)
             {
-                AddChildItems(menuItemDto, menuItems.Items.ToList(), l, context.Menu);
+                foreach (var menuItemDto in menuItems.Items.Where(x => x.ParentId == null && x.IsActive))
+                {
+               
+                    var menuItem = context.Menu.FindMenuItem(menuItemDto.Name);
+                    if (menuItem==null)
+                    {
+                        AddChildItems(menuItemDto, menuItems.Items.ToList(), l, context.Menu);
+                    }
+                    else
+                    {
+                        if (!menuItemDto.Url.IsNullOrWhiteSpace())
+                        {
+                            menuItem.Url = menuItemDto.Url;
+                        }
+                        if (!menuItemDto.Icon.IsNullOrWhiteSpace())
+                        {
+                            menuItem.Icon = menuItemDto.Icon;
+                        }
+                        menuItem.Order = menuItemDto.Order;
+                    }
+                }
             }
         }
+       
     }
 
     private void AddChildItems(MenuItemDto menuItem, List<MenuItemDto> source, IStringLocalizer localizer, IHasMenuItems parent = null)

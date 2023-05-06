@@ -19,6 +19,7 @@ public class DynamicMenuBlazorModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
+        var configuration = context.Services.GetConfiguration();
         context.Services.AddAutoMapperObjectMapper<DynamicMenuBlazorModule>();
 
         Configure<AbpAutoMapperOptions>(options =>
@@ -28,7 +29,7 @@ public class DynamicMenuBlazorModule : AbpModule
 
         Configure<AbpNavigationOptions>(options =>
         {
-            options.MenuContributors.Add(new DynamicMenuMenuContributor());
+            options.MenuContributors.Add(new DynamicMenuMenuContributor(configuration));
         });
 
         Configure<AbpRouterOptions>(options =>

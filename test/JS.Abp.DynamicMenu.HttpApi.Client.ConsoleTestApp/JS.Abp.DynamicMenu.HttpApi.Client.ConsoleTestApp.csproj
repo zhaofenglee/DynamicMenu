@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Volo.Abp.Http.Client.IdentityModel" Version="$(VoloAbpPackageVersion)" />
     <PackageReference Include="Volo.Abp.Autofac" Version="$(VoloAbpPackageVersion)" />
+    <PackageReference Include="Volo.Abp.IdentityModel" Version="7.2.1" />
     <ProjectReference Include="..\..\src\JS.Abp.DynamicMenu.HttpApi.Client\JS.Abp.DynamicMenu.HttpApi.Client.csproj" />
   </ItemGroup>
 
