@@ -41,7 +41,7 @@ namespace JS.Abp.DynamicMenu.Blazor.Pages
         protected string SelectedEditTab = "menuItem-edit-tab";
         private IReadOnlyList<LookupDto<Guid?>> MenuItemsNullable { get; set; } = new List<LookupDto<Guid?>>();
         private string MenuName { get; set; }
-
+        private List<string> AbpPolicyNames  { get; set; } = new List<string>();
         public MenuItems()
         {
             NewMenuItem = new MenuItemCreateDto();
@@ -230,6 +230,7 @@ namespace JS.Abp.DynamicMenu.Blazor.Pages
 
         private async Task GetNullableMenuItemLookupAsync(string newValue = null)
         {
+            AbpPolicyNames = (await AbpAuthorizationPolicyProvider.GetPoliciesNamesAsync());
             MenuItemsNullable = (await MenuItemsAppService.GetMenuItemLookupAsync(new LookupRequestDto { Filter = newValue })).Items;
         }
 

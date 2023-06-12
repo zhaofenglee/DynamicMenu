@@ -18,12 +18,14 @@
 @using JS.Abp.DynamicMenu.Permissions
 @using Microsoft.AspNetCore.Components
 @using Volo.Abp.AspNetCore.Components.Web
+@using Volo.Abp.Authorization
 @using Volo.Abp.Http.Client
 @inherits DynamicMenuComponentBase
 @inject IMenuItemsAppService MenuItemsAppService
 @inject IUiMessageService UiMessageService
 @inject IRemoteServiceConfigurationProvider RemoteServiceConfigurationProvider
 @inject NavigationManager NavigationManager
+@inject IAbpAuthorizationPolicyProvider AbpAuthorizationPolicyProvider
 
 @* ************************* PAGE HEADER ************************* *@
 <PageHeader Title="@MenuName" BreadcrumbItems="BreadcrumbItems" Toolbar="Toolbar">
@@ -285,16 +287,27 @@
                     </Validation>
 
 
-                    <Validation>
+                    <div>
                         <Field>
                             <FieldLabel>@L["Permission"]</FieldLabel>
-                            <TextEdit @bind-Text="@NewMenuItem.Permission" >
-                                <Feedback>
-                                    <ValidationError />
-                                </Feedback>
-                            </TextEdit>
+                            @* <TextEdit @bind-Text="@NewMenuItem.Permission" > *@
+                            @*     <Feedback> *@
+                            @*         <ValidationError /> *@
+                            @*     </Feedback> *@
+                            @* </TextEdit> *@
+                            <Autocomplete TItem="string"
+                                          TValue="string"
+                                          Data="@AbpPolicyNames"
+                                          TextField="@(( item ) => item)"
+                                          ValueField="@((item) => item)"
+                                          @bind-SelectedValue="NewMenuItem.Permission"
+                                          Placeholder="@L["Search"]"
+                                          Virtualize>
+                                <NotFoundContent> Sorry... @context was not found! :( </NotFoundContent>
+                            </Autocomplete>
+                            
                         </Field>
-                    </Validation>
+                    </div>
 
 
                     <Validation>
@@ -455,16 +468,26 @@
                     </Validation>
 
 
-                    <Validation>
+                    <div>
                         <Field>
                             <FieldLabel>@L["Permission"]</FieldLabel>
-                            <TextEdit @bind-Text="@EditingMenuItem.Permission" >
-                                <Feedback>
-                                    <ValidationError />
-                                </Feedback>
-                            </TextEdit>
+                            @* <TextEdit @bind-Text="@EditingMenuItem.Permission" > *@
+                            @*     <Feedback> *@
+                            @*         <ValidationError /> *@
+                            @*     </Feedback> *@
+                            @* </TextEdit> *@
+                            <Autocomplete TItem="string"
+                                          TValue="string"
+                                          Data="@AbpPolicyNames"
+                                          TextField="@(( item ) => item)"
+                                          ValueField="@((item) => item)"
+                                          @bind-SelectedValue="EditingMenuItem.Permission"
+                                          Placeholder="@L["Search"]"
+                                          Virtualize>
+                                <NotFoundContent> Sorry... @context was not found! :( </NotFoundContent>
+                            </Autocomplete>
                         </Field>
-                    </Validation>
+                    </div>
 
 
                     <Validation>
