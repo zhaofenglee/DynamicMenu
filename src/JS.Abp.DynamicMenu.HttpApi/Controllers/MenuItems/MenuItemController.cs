@@ -11,10 +11,10 @@ using JS.Abp.DynamicMenu.Shared;
 
 namespace JS.Abp.DynamicMenu.Controllers.MenuItems
 {
-    [RemoteService]
-    [Area("app")]
+    [RemoteService(Name = DynamicMenuRemoteServiceConsts.RemoteServiceName)]
+    [Area("dynamicMenu")]
     [ControllerName("MenuItem")]
-    [Route("api/app/menu-items")]
+    [Route("api/dynamic-menu/menu-items")]
 
     public class MenuItemController : AbpController, IMenuItemsAppService
     {
