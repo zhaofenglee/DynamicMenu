@@ -19,6 +19,7 @@ using Volo.Abp.Authorization;
 using Volo.Abp.Caching;
 using Microsoft.Extensions.Caching.Distributed;
 using JS.Abp.DynamicMenu.Shared;
+using Volo.Abp.Authorization.Permissions;
 
 namespace JS.Abp.DynamicMenu.MenuItems
 {
@@ -29,12 +30,16 @@ namespace JS.Abp.DynamicMenu.MenuItems
         private readonly IDistributedCache<MenuItemExcelDownloadTokenCacheItem, string> _excelDownloadTokenCache;
         private readonly IMenuItemRepository _menuItemRepository;
         private readonly MenuItemManager _menuItemManager;
-
-        public MenuItemsAppService(IMenuItemRepository menuItemRepository, MenuItemManager menuItemManager, IDistributedCache<MenuItemExcelDownloadTokenCacheItem, string> excelDownloadTokenCache)
+        private readonly IDynamicPermissionDefinitionStore _dynamicStore;
+        public MenuItemsAppService(IMenuItemRepository menuItemRepository,
+            MenuItemManager menuItemManager, 
+            IDistributedCache<MenuItemExcelDownloadTokenCacheItem, string> excelDownloadTokenCache,
+            IDynamicPermissionDefinitionStore dynamicStore)
         {
             _excelDownloadTokenCache = excelDownloadTokenCache;
             _menuItemRepository = menuItemRepository;
             _menuItemManager = menuItemManager;
+            _dynamicStore = dynamicStore;
         }
 
         public virtual async Task<PagedResultDto<MenuItemWithNavigationPropertiesDto>> GetListAsync(GetMenuItemsInput input)
@@ -139,6 +144,12 @@ namespace JS.Abp.DynamicMenu.MenuItems
             {
                 Token = token
             };
+        }
+
+        public virtual async Task<List<string>> GetPoliciesNamesAsync()
+        {
+            var dynamicPermissions = await _dynamicStore.GetPermissionsAsync();
+            return dynamicPermissions.Select(p => p.Name).ToList();
         }
 
         public async Task<ListResultDto<MenuItemDto>> GetListAsync()

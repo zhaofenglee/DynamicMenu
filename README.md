@@ -12,13 +12,16 @@
   * JS.Abp.DynamicMenu.HttpApi.Client
   
 ### 2.Add `DependsOn` attribute to configure the module
- * DependsOn(typeof(DynamicMenuApplicationModule))
- * DependsOn(typeof(DynamicMenuApplicationContractsModule))
- * DependsOn(typeof(DynamicMenuDomainModule))
- * DependsOn(typeof(DynamicMenuDomainSharedModule))
- * DependsOn(typeof(DynamicMenuEntityFrameworkCoreModule))
- * DependsOn(typeof(DynamicMenuHttpApiModule))
- * DependsOn(typeof(DynamicMenuHttpApiClientModule))
+ * [DependsOn(typeof(DynamicMenuApplicationModule))]
+ * [DependsOn(typeof(DynamicMenuApplicationContractsModule))]
+ * [DependsOn(typeof(DynamicMenuDomainModule))]
+ * [DependsOn(typeof(DynamicMenuDomainSharedModule))]
+ * [DependsOn(typeof(DynamicMenuEntityFrameworkCoreModule))]
+ * [DependsOn(typeof(DynamicMenuHttpApiModule))]
+ * [DependsOn(typeof(DynamicMenuHttpApiClientModule))]
+ * [DependsOn(typeof(DynamicMenuBlazorServerModule))]
+
+
 
 ### 3. Add ` builder.ConfigureDynamicMenu();` to the `OnModelCreating()` method in **YourProjectDbContext.cs**.
 

@@ -1,5 +1,6 @@
 using JS.Abp.DynamicMenu.Shared;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Volo.Abp;
@@ -91,7 +92,11 @@ namespace JS.Abp.DynamicMenu.Controllers.MenuItems
         {
             return _menuItemsAppService.GetDownloadTokenAsync();
         }
-
-       
+        [HttpGet]
+        [Route("policies-names")]
+        public virtual Task<List<string>> GetPoliciesNamesAsync()
+        {
+            return _menuItemsAppService.GetPoliciesNamesAsync();
+        }
     }
 }

@@ -230,7 +230,7 @@ namespace JS.Abp.DynamicMenu.Blazor.Pages
 
         private async Task GetNullableMenuItemLookupAsync(string newValue = null)
         {
-            AbpPolicyNames = (await AbpAuthorizationPolicyProvider.GetPoliciesNamesAsync());
+            AbpPolicyNames = (await MenuItemsAppService.GetPoliciesNamesAsync());
             MenuItemsNullable = (await MenuItemsAppService.GetMenuItemLookupAsync(new LookupRequestDto { Filter = newValue })).Items;
         }
 

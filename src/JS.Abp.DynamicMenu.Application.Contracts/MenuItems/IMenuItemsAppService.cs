@@ -1,5 +1,6 @@
 using JS.Abp.DynamicMenu.Shared;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
@@ -28,5 +29,7 @@ namespace JS.Abp.DynamicMenu.MenuItems
         Task<IRemoteStreamContent> GetListAsExcelFileAsync(MenuItemExcelDownloadDto input);
 
         Task<DownloadTokenResultDto> GetDownloadTokenAsync();
+
+        Task<List<string>> GetPoliciesNamesAsync();
     }
 }
