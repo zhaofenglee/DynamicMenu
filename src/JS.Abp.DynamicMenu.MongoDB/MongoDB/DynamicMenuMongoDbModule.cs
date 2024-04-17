@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using JS.Abp.DynamicMenu.MenuItems;
+using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Modularity;
 using Volo.Abp.MongoDB;
 
@@ -14,9 +15,11 @@ public class DynamicMenuMongoDbModule : AbpModule
     {
         context.Services.AddMongoDbContext<DynamicMenuMongoDbContext>(options =>
         {
-                /* Add custom repositories here. Example:
-                 * options.AddRepository<Question, MongoQuestionRepository>();
-                 */
+            /* Add custom repositories here. Example:
+             * options.AddRepository<Question, MongoQuestionRepository>();
+             */
+            options.AddRepository<MenuItem, MenuItems.MongoMenuItemRepository>();
+
         });
     }
 }
