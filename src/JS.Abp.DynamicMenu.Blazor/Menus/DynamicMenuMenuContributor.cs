@@ -36,7 +36,7 @@ public class DynamicMenuMenuContributor : IMenuContributor
            new ApplicationMenuItem(
                DynamicMenuMenus.MenuItems,
                l["Menu:MenuItems"],
-               url: "/menu-items",
+               url: "/DynamicMenu/MenuItems",
                icon: "fab fa-elementor",
                requiredPermissionName: DynamicMenuPermissions.MenuItems.Default)
        );

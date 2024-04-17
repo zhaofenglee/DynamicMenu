@@ -4,23 +4,22 @@ using System.Linq;
 using System.Threading.Tasks;
 using Blazorise;
 using Blazorise.DataGrid;
-using Volo.Abp.BlazoriseUI.Components;
-using Microsoft.AspNetCore.Authorization;
-using Volo.Abp.Application.Dtos;
-using Volo.Abp.AspNetCore.Components.Web.Theming.PageToolbars;
 using JS.Abp.DynamicMenu.MenuItems;
 using JS.Abp.DynamicMenu.Permissions;
 using JS.Abp.DynamicMenu.Shared;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
+using Volo.Abp.Application.Dtos;
+using Volo.Abp.AspNetCore.Components.Web.Theming.PageToolbars;
+using Volo.Abp.BlazoriseUI.Components;
 
-namespace JS.Abp.DynamicMenu.Blazor.Pages
+namespace JS.Abp.DynamicMenu.Blazor.Pages.DynamicMenu
 {
     public partial class MenuItems
     {
-        [Parameter] public Guid? DetailId { get; set; }
         protected List<Volo.Abp.BlazoriseUI.BreadcrumbItem> BreadcrumbItems = new List<Volo.Abp.BlazoriseUI.BreadcrumbItem>();
         protected PageToolbar Toolbar {get;} = new PageToolbar();
-        private IReadOnlyList<MenuItemWithNavigationPropertiesDto> MenuItemList { get; set; }
+        private IReadOnlyList<MenuItemDto> MenuItemList { get; set; }
         private int PageSize { get; } = LimitedResultRequestDto.DefaultMaxResultCount;
         private int CurrentPage { get; set; } = 1;
         private string CurrentSorting { get; set; }
@@ -36,12 +35,14 @@ namespace JS.Abp.DynamicMenu.Blazor.Pages
         private Modal CreateMenuItemModal { get; set; }
         private Modal EditMenuItemModal { get; set; }
         private GetMenuItemsInput Filter { get; set; }
-        private DataGridEntityActionsColumn<MenuItemWithNavigationPropertiesDto> EntityActionsColumn { get; set; }
+        private DataGridEntityActionsColumn<MenuItemDto> EntityActionsColumn { get; set; }
         protected string SelectedCreateTab = "menuItem-create-tab";
         protected string SelectedEditTab = "menuItem-edit-tab";
         private IReadOnlyList<LookupDto<Guid?>> MenuItemsNullable { get; set; } = new List<LookupDto<Guid?>>();
         private string MenuName { get; set; }
         private List<string> AbpPolicyNames  { get; set; } = new List<string>();
+        List<MenuItemTreeDto> Items { get; set; } = new List<MenuItemTreeDto>();
+        MenuItemTreeDto selectedNode = new MenuItemTreeDto();
         public MenuItems()
         {
             NewMenuItem = new MenuItemCreateDto();
@@ -60,8 +61,13 @@ namespace JS.Abp.DynamicMenu.Blazor.Pages
             await SetBreadcrumbItemsAsync();
             await SetPermissionsAsync();
             await GetNullableMenuItemLookupAsync();
+            await GetTreesAsync();
 
+        }
 
+        private async Task GetTreesAsync()
+        {
+            Items = await MenuItemsAppService.GetTreeAsync();
         }
 
         protected virtual ValueTask SetBreadcrumbItemsAsync()
@@ -94,19 +100,15 @@ namespace JS.Abp.DynamicMenu.Blazor.Pages
 
         private async Task GetMenuItemsAsync()
         {
-            MenuName = L["MenuItems"];
+            
             Filter.MaxResultCount = PageSize;
             Filter.SkipCount = (CurrentPage - 1) * PageSize;
             Filter.Sorting = CurrentSorting;
-            if(DetailId!=null)
-            {
-                var menuItem = await MenuItemsAppService.GetAsync((Guid)DetailId);
-                MenuName +=$" - {menuItem.Name}";
-                Filter.ParentId = DetailId;
-            }
+            Filter.ParentId = selectedNode.Id==Guid.Empty?null:selectedNode.Id;
                
             var result = await MenuItemsAppService.GetPageLookupAsync(Filter);
             MenuItemList = result.Items;
+           
             TotalCount = (int)result.TotalCount;
         }
 
@@ -121,10 +123,10 @@ namespace JS.Abp.DynamicMenu.Blazor.Pages
         {
             var token = (await MenuItemsAppService.GetDownloadTokenAsync()).Token;
             var remoteService = await RemoteServiceConfigurationProvider.GetConfigurationOrDefaultAsync("Default");
-            NavigationManager.NavigateTo($"{remoteService.BaseUrl.EnsureEndsWith('/')}api/app/menu-items/as-excel-file?DownloadToken={token}&FilterText={Filter.FilterText}", forceLoad: true);
+            NavigationManager.NavigateTo($"{remoteService.BaseUrl.EnsureEndsWith('/')}api/dynamic-menu/menu-items/as-excel-file?DownloadToken={token}&FilterText={Filter.FilterText}", forceLoad: true);
         }
 
-        private async Task OnDataGridReadAsync(DataGridReadDataEventArgs<MenuItemWithNavigationPropertiesDto> e)
+        private async Task OnDataGridReadAsync(DataGridReadDataEventArgs<MenuItemDto> e)
         {
             CurrentSorting = e.Columns
                 .Where(c => c.SortDirection != SortDirection.Default)
@@ -138,13 +140,10 @@ namespace JS.Abp.DynamicMenu.Blazor.Pages
         private async Task OpenCreateMenuItemModalAsync()
         {
             NewMenuItem = new MenuItemCreateDto{
-                
+                ParentId = selectedNode.Id==Guid.Empty?null:selectedNode.Id
                 
             };
-            if(DetailId != null)
-            {
-                NewMenuItem.ParentId = DetailId;
-            }
+            
             await NewMenuItemValidations.ClearAll();
             await CreateMenuItemModal.Show();
         }
@@ -158,19 +157,19 @@ namespace JS.Abp.DynamicMenu.Blazor.Pages
             await CreateMenuItemModal.Hide();
         }
 
-        private async Task OpenEditMenuItemModalAsync(MenuItemWithNavigationPropertiesDto input)
+        private async Task OpenEditMenuItemModalAsync(MenuItemDto input)
         {
-            var menuItem = await MenuItemsAppService.GetWithNavigationPropertiesAsync(input.MenuItem.Id);
+            var menuItem = await MenuItemsAppService.GetAsync(input.Id);
             
-            EditingMenuItemId = menuItem.MenuItem.Id;
-            EditingMenuItem = ObjectMapper.Map<MenuItemDto, MenuItemUpdateDto>(menuItem.MenuItem);
+            EditingMenuItemId = menuItem.Id;
+            EditingMenuItem = ObjectMapper.Map<MenuItemDto, MenuItemUpdateDto>(menuItem);
             await EditingMenuItemValidations.ClearAll();
             await EditMenuItemModal.Show();
         }
 
-        private async Task DeleteMenuItemAsync(MenuItemWithNavigationPropertiesDto input)
+        private async Task DeleteMenuItemAsync(MenuItemDto input)
         {
-            await MenuItemsAppService.DeleteAsync(input.MenuItem.Id);
+            await MenuItemsAppService.DeleteAsync(input.Id);
             await GetMenuItemsAsync();
         }
 
@@ -233,12 +232,11 @@ namespace JS.Abp.DynamicMenu.Blazor.Pages
             AbpPolicyNames = (await MenuItemsAppService.GetPoliciesNamesAsync());
             MenuItemsNullable = (await MenuItemsAppService.GetMenuItemLookupAsync(new LookupRequestDto { Filter = newValue })).Items;
         }
-
-        private async Task NavigateToSubPage(Guid id)
+        
+        private async Task OnSelectedNodeChangedAsync()
         {
-            NavigationManager.NavigateTo($"/menu-items/{id}",true);
-            //await GetMenuItemsAsync();
-            //await InvokeAsync(StateHasChanged);
+            await GetMenuItemsAsync();
+            await InvokeAsync(StateHasChanged);
         }
     }
 }
