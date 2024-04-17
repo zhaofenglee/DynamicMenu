@@ -14,8 +14,7 @@ public class DynamicMenuApplicationAutoMapperProfile : Profile
          * into multiple profile classes for a better organization. */
         CreateMap<MenuItem, MenuItemDto>();
         CreateMap<MenuItem, MenuItemExcelDto>();
-
-        CreateMap<MenuItemWithNavigationProperties, MenuItemWithNavigationPropertiesDto>();
+        CreateMap<MenuItem, MenuItemTreeDto>().ForMember(dest=>dest.Children, opt=>opt.Ignore());
         CreateMap<MenuItem, LookupDto<Guid?>>().ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.DisplayName));
     }
 }

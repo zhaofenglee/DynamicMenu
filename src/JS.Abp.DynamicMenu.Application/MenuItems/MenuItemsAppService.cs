@@ -42,22 +42,55 @@ namespace JS.Abp.DynamicMenu.MenuItems
             _dynamicStore = dynamicStore;
         }
 
-        public virtual async Task<PagedResultDto<MenuItemWithNavigationPropertiesDto>> GetListAsync(GetMenuItemsInput input)
+        public virtual async Task<PagedResultDto<MenuItemDto>> GetListAsync(GetMenuItemsInput input)
         {
             var totalCount = await _menuItemRepository.GetCountAsync(input.FilterText, input.Name, input.DisplayName, input.IsActive, input.Url, input.Icon, input.OrderMin, input.OrderMax, input.Target, input.ElementId, input.CssClass, input.Permission, input.ResourceTypeName, input.ParentId);
-            var items = await _menuItemRepository.GetListWithNavigationPropertiesAsync(input.FilterText, input.Name, input.DisplayName, input.IsActive, input.Url, input.Icon, input.OrderMin, input.OrderMax, input.Target, input.ElementId, input.CssClass, input.Permission, input.ResourceTypeName, input.ParentId, input.Sorting, input.MaxResultCount, input.SkipCount);
+            var items = await _menuItemRepository.GetListAsync(input.FilterText, input.Name, input.DisplayName, input.IsActive, input.Url, input.Icon, input.OrderMin, input.OrderMax, input.Target, input.ElementId, input.CssClass, input.Permission, input.ResourceTypeName, input.ParentId, input.Sorting, input.MaxResultCount, input.SkipCount);
 
-            return new PagedResultDto<MenuItemWithNavigationPropertiesDto>
+            return new PagedResultDto<MenuItemDto>
             {
                 TotalCount = totalCount,
-                Items = ObjectMapper.Map<List<MenuItemWithNavigationProperties>, List<MenuItemWithNavigationPropertiesDto>>(items)
+                Items = ObjectMapper.Map<List<MenuItem>, List<MenuItemDto>>(items)
             };
         }
 
-        public virtual async Task<MenuItemWithNavigationPropertiesDto> GetWithNavigationPropertiesAsync(Guid id)
+
+        public virtual async Task<List<MenuItemTreeDto>> GetTreeAsync(string parentId = null)
         {
-            return ObjectMapper.Map<MenuItemWithNavigationProperties, MenuItemWithNavigationPropertiesDto>
-                (await _menuItemRepository.GetWithNavigationPropertiesAsync(id));
+            var menuItemDatas = (await _menuItemRepository.GetListAsync());
+            var nodes = new List<MenuItemTreeDto>();
+            LoadRoot(nodes,menuItemDatas);
+            return new List<MenuItemTreeDto>()
+            {
+                new MenuItemTreeDto()
+                {
+                    Id = null,
+                    Name = "All",
+                    DisplayName = "All",
+                    Children = nodes
+                },
+            };
+        }
+        
+        private void LoadRoot(List<MenuItemTreeDto> list, List<MenuItem> items)
+        {
+            foreach (var cacheGroup in items.Where(c => c.ParentId == null).OrderBy(c => c.Order))
+            {
+                MenuItemTreeDto pnode = ObjectMapper.Map<MenuItem, MenuItemTreeDto>(cacheGroup);
+                LoadChild(pnode, items);
+                list.Add(pnode);
+            }
+        }
+
+        private void LoadChild(MenuItemTreeDto parentNode, List<MenuItem> items)
+        {
+            var children = items.Where(x => x.ParentId == parentNode.Id).ToList();
+            foreach (var child in children)
+            {
+                var childNode = ObjectMapper.Map<MenuItem, MenuItemTreeDto>(child);
+                parentNode.Children.Add(childNode);
+                LoadChild(childNode, items);
+            }
         }
 
         public virtual async Task<MenuItemDto> GetAsync(Guid id)
@@ -84,6 +117,7 @@ namespace JS.Abp.DynamicMenu.MenuItems
         [Authorize(DynamicMenuPermissions.MenuItems.Delete)]
         public virtual async Task DeleteAsync(Guid id)
         {
+            //TODO: Check for dependencies before deletion
             await _menuItemRepository.DeleteAsync(id);
         }
 
@@ -161,15 +195,15 @@ namespace JS.Abp.DynamicMenu.MenuItems
             );
         }
 
-        public async Task<PagedResultDto<MenuItemWithNavigationPropertiesDto>> GetPageLookupAsync(GetMenuItemsInput input)
+        public async Task<PagedResultDto<MenuItemDto>> GetPageLookupAsync(GetMenuItemsInput input)
         {
             var totalCount = await _menuItemRepository.GetCountAsync(input.FilterText, input.Name, input.DisplayName, input.IsActive, input.Url, input.Icon, input.OrderMin, input.OrderMax, input.Target, input.ElementId, input.CssClass, input.Permission, input.ResourceTypeName, input.ParentId);
-            var items = await _menuItemRepository.GetListWithNavigationPropertiesAsync(input.FilterText, input.Name, input.DisplayName, input.IsActive, input.Url, input.Icon, input.OrderMin, input.OrderMax, input.Target, input.ElementId, input.CssClass, input.Permission, input.ResourceTypeName, input.ParentId, input.Sorting, input.MaxResultCount, input.SkipCount);
+            var items = await _menuItemRepository.GetListAsync(input.FilterText, input.Name, input.DisplayName, input.IsActive, input.Url, input.Icon, input.OrderMin, input.OrderMax, input.Target, input.ElementId, input.CssClass, input.Permission, input.ResourceTypeName, input.ParentId, input.Sorting, input.MaxResultCount, input.SkipCount);
 
-            return new PagedResultDto<MenuItemWithNavigationPropertiesDto>
+            return new PagedResultDto<MenuItemDto>
             {
                 TotalCount = totalCount,
-                Items = ObjectMapper.Map<List<MenuItemWithNavigationProperties>, List<MenuItemWithNavigationPropertiesDto>>(items)
+                Items = ObjectMapper.Map<List<MenuItem>, List<MenuItemDto>>(items)
             };
         }
     }
