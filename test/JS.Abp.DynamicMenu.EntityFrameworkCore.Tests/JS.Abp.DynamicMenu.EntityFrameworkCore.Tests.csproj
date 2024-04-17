@@ -1,18 +1,22 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="..\..\common.props" />
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
     <RootNamespace>JS.Abp.DynamicMenu</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="7.0.0" />
-    <ProjectReference Include="..\..\src\JS.Abp.DynamicMenu.EntityFrameworkCore\JS.Abp.DynamicMenu.EntityFrameworkCore.csproj" />
-    <ProjectReference Include="..\JS.Abp.DynamicMenu.TestBase\JS.Abp.DynamicMenu.TestBase.csproj" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.0" />
     <PackageReference Include="Volo.Abp.EntityFrameworkCore.Sqlite" Version="$(VoloAbpPackageVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\JS.Abp.DynamicMenu.EntityFrameworkCore\JS.Abp.DynamicMenu.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\JS.Abp.DynamicMenu.Application.Tests\JS.Abp.DynamicMenu.Application.Tests.csproj" />
   </ItemGroup>
 
 </Project>

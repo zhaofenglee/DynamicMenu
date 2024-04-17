@@ -1,17 +1,17 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="..\..\common.props" />
   
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
     <RootNamespace>JS.Abp.DynamicMenu</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Volo.Abp.Http.Client.IdentityModel" Version="$(VoloAbpPackageVersion)" />
     <PackageReference Include="Volo.Abp.Autofac" Version="$(VoloAbpPackageVersion)" />
-    <PackageReference Include="Volo.Abp.IdentityModel" Version="$(VoloAbpPackageVersion)" />
     <ProjectReference Include="..\..\src\JS.Abp.DynamicMenu.HttpApi.Client\JS.Abp.DynamicMenu.HttpApi.Client.csproj" />
   </ItemGroup>
 
@@ -29,7 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
   </ItemGroup>
 
 </Project>
