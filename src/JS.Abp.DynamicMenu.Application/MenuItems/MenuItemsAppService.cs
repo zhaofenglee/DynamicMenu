@@ -30,16 +30,18 @@ namespace JS.Abp.DynamicMenu.MenuItems
         private readonly IDistributedCache<MenuItemExcelDownloadTokenCacheItem, string> _excelDownloadTokenCache;
         private readonly IMenuItemRepository _menuItemRepository;
         private readonly MenuItemManager _menuItemManager;
-        private readonly IDynamicPermissionDefinitionStore _dynamicStore;
+
+        protected IPermissionDefinitionManager PermissionDefinition =>
+            LazyServiceProvider.LazyGetRequiredService<IPermissionDefinitionManager>();
         public MenuItemsAppService(IMenuItemRepository menuItemRepository,
             MenuItemManager menuItemManager, 
-            IDistributedCache<MenuItemExcelDownloadTokenCacheItem, string> excelDownloadTokenCache,
-            IDynamicPermissionDefinitionStore dynamicStore)
+            IDistributedCache<MenuItemExcelDownloadTokenCacheItem, string> excelDownloadTokenCache
+            )
         {
             _excelDownloadTokenCache = excelDownloadTokenCache;
             _menuItemRepository = menuItemRepository;
             _menuItemManager = menuItemManager;
-            _dynamicStore = dynamicStore;
+           
         }
 
         public virtual async Task<PagedResultDto<MenuItemDto>> GetListAsync(GetMenuItemsInput input)
@@ -182,7 +184,7 @@ namespace JS.Abp.DynamicMenu.MenuItems
 
         public virtual async Task<List<string>> GetPoliciesNamesAsync()
         {
-            var dynamicPermissions = await _dynamicStore.GetPermissionsAsync();
+            var dynamicPermissions = await PermissionDefinition.GetPermissionsAsync();
             return dynamicPermissions.Select(p => p.Name).ToList();
         }
 
