@@ -36,7 +36,7 @@ public class DynamicMenuMenuContributor : IMenuContributor
            new ApplicationMenuItem(
                DynamicMenuMenus.MenuItems,
                l["Menu:MenuItems"],
-               url: "/menu-items",
+               url: "/DynamicMenu/MenuItems",
                icon: "fab fa-elementor",
                requiredPermissionName: DynamicMenuPermissions.MenuItems.Default)
        );
@@ -58,7 +58,8 @@ public class DynamicMenuMenuContributor : IMenuContributor
         
             if (menuItems.Items.Count > 0)
             {
-                foreach (var menuItemDto in menuItems.Items.Where(x => x.ParentId == null && x.IsActive))
+                foreach (var menuItemDto in menuItems.Items.Where(x => x.ParentId == null && x.IsActive).OrderBy(x => x.Order)
+                             .ThenBy(x => x.Name))
                 {
                
                     var menuItem = context.Menu.FindMenuItem(menuItemDto.Name);
@@ -89,7 +90,8 @@ public class DynamicMenuMenuContributor : IMenuContributor
         menuItem.DisplayName = localizer[menuItem.DisplayName];
         var applicationMenuItem = CreateApplicationMenuItem(menuItem);
 
-        foreach (var item in source.Where(x => x.ParentId == menuItem.Id && x.IsActive))
+        foreach (var item in source.Where(x => x.ParentId == menuItem.Id && x.IsActive).OrderBy(x => x.Order)
+                     .ThenBy(x => x.Name))
         {
             AddChildItems(item, source, localizer, applicationMenuItem);
         }

@@ -32,17 +32,16 @@ namespace JS.Abp.DynamicMenu.Controllers.MenuItems
             return _menuItemsAppService.GetListAsync();
         }
         [HttpGet]
-        [Route("lookup/pages")]
-        public Task<PagedResultDto<MenuItemWithNavigationPropertiesDto>> GetPageLookupAsync(GetMenuItemsInput input)
+        [Route("lookup")]
+        public Task<PagedResultDto<MenuItemDto>> GetPageLookupAsync(GetMenuItemsInput input)
         {
            return _menuItemsAppService.GetPageLookupAsync(input);
         }
-
         [HttpGet]
-        [Route("with-navigation-properties/{id}")]
-        public Task<MenuItemWithNavigationPropertiesDto> GetWithNavigationPropertiesAsync(Guid id)
+        [Route("tree")]
+        public virtual Task<List<MenuItemTreeDto>> GetTreeAsync(string parentId = null)
         {
-            return _menuItemsAppService.GetWithNavigationPropertiesAsync(id);
+            return _menuItemsAppService.GetTreeAsync(parentId);
         }
 
         [HttpGet]

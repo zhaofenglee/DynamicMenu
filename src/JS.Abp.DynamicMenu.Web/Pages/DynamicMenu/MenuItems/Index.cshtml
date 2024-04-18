@@ -1,0 +1,116 @@
+@page 
+@using Microsoft.AspNetCore.Authorization
+@using Volo.Abp.AspNetCore.Mvc.UI.Layout
+@using JS.Abp.DynamicMenu.Permissions
+@using JS.Abp.DynamicMenu.Web.Pages.DynamicMenu.MenuItems
+@using JS.Abp.DynamicMenu.Web.Menus
+@using Microsoft.AspNetCore.Mvc.Localization
+@using JS.Abp.DynamicMenu.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Packages.JsTree
+@inject IHtmlLocalizer<DynamicMenuResource> L
+@inject IAuthorizationService Authorization
+@model IndexModel
+@inject IPageLayout PageLayout
+@{
+    PageLayout.Content.Title = L["MenuItems"].Value;
+    PageLayout.Content.MenuItemName = DynamicMenuMenus.MenuItems;
+}
+
+@section styles
+{
+    <abp-style-bundle>
+    <abp-style type="typeof(JsTreeStyleContributor)"/>
+    </abp-style-bundle>
+}
+
+@section scripts
+{
+<abp-script-bundle>
+    <abp-script type="typeof(JsTreeScriptContributor)"/>
+    <abp-script src="/Pages/DynamicMenu/MenuItems/index.js" />
+</abp-script-bundle>
+   
+
+}
+
+@section content_toolbar {
+    <abp-button id="ExportToExcelButton" text="@L["ExportToExcel"].Value" icon="download" size="Small" button-type="Primary" />
+    @if (await Authorization.IsGrantedAsync(DynamicMenuPermissions.MenuItems.Create))
+    {
+        <abp-button id="NewMenuItemButton" text="@L["NewMenuItem"].Value" icon="plus" size="Small" button-type="Primary" />
+    }
+
+}
+<div id="MenuItemsWrapper">
+    <abp-row>
+        <abp-column size-md="_12" size-lg="_3">
+            <abp-card>
+                <abp-card-body>
+                    <abp-card-title>
+                        <abp-row h-align="Between">
+                            <abp-column>
+                                <span style="font-size:initial"> @L["MenuItems"]</span>
+                            </abp-column>
+                            <abp-column>
+                            </abp-column>
+                        </abp-row>
+                    </abp-card-title>
+                    <div id="DirectoryTree"></div>
+                </abp-card-body>
+            </abp-card>
+        </abp-column>
+        <abp-column size-md="_12" size-lg="_9">
+            <abp-card>
+                <abp-card-body>
+                    <abp-card-title>
+                        <abp-row h-align="Between">
+                            <abp-column>
+                                <h3 class="selected-cache-name"></h3>
+                            </abp-column>
+
+                        </abp-row>
+                    </abp-card-title>
+                    <abp-row id="CacheManagement_Table_Header" class="mb-3">
+                        <abp-column>
+                            <form id="SearchForm" autocomplete="off">
+                                <div class="input-group">
+                                    <input class="form-control page-search-filter-text" id="FilterText" placeholder="@L["Search"]"/>
+                                    <abp-button button-type="Primary" type="submit" icon="search"/>
+                                </div>
+                            </form>
+                        </abp-column>
+                    </abp-row>
+                    <abp-row>
+                        <abp-column>
+                            <abp-table striped-rows="true" id="MenuItemsTable">
+                                <thead>
+                                <tr>
+
+                                    <th>@L["Actions"]</th>
+                                    <th>@L["Name"]</th>
+                                    <th>@L["DisplayName"]</th>
+                                    <th>@L["IsActive"]</th>
+                                    <th>@L["Url"]</th>
+                                    <th>@L["Icon"]</th>
+                                    <th>@L["Order"]</th>
+                                    <th>@L["Target"]</th>
+                                    <th>@L["ElementId"]</th>
+                                    <th>@L["CssClass"]</th>
+                                    <th>@L["Permission"]</th>
+                                    <th>@L["ResourceTypeName"]</th>
+
+
+
+                                </tr>
+                                </thead>
+                            </abp-table>
+                        </abp-column>
+                    </abp-row>
+                </abp-card-body>
+            </abp-card>
+
+
+        </abp-column>
+    </abp-row>
+</div>
+

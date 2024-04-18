@@ -118,12 +118,13 @@ namespace JS.Abp.DynamicMenu.EntityFrameworkCore
             string cssClass = null,
             string permission = null,
             string resourceTypeName = null,
+            Guid? parentId = null,
             string sorting = null,
             int maxResultCount = int.MaxValue,
             int skipCount = 0,
             CancellationToken cancellationToken = default)
         {
-            var query = ApplyFilter(await GetQueryableAsync(), filterText, name, displayName, isActive, url, icon, orderMin, orderMax, target, elementId, cssClass, permission, resourceTypeName);
+            var query = ApplyFilter(await GetQueryableAsync(), filterText, name, displayName, isActive, url, icon, orderMin, orderMax, target, elementId, cssClass, permission, resourceTypeName,parentId);
             query = query.OrderBy(string.IsNullOrWhiteSpace(sorting) ? MenuItemConsts.GetDefaultSorting(false) : sorting);
             return await query.PageBy(skipCount, maxResultCount).ToListAsync(cancellationToken);
         }
@@ -164,7 +165,8 @@ namespace JS.Abp.DynamicMenu.EntityFrameworkCore
             string elementId = null,
             string cssClass = null,
             string permission = null,
-            string resourceTypeName = null)
+            string resourceTypeName = null,
+            Guid? parentId = null)
         {
             return query
                     .WhereIf(!string.IsNullOrWhiteSpace(filterText), e => e.Name.Contains(filterText) || e.DisplayName.Contains(filterText) || e.Url.Contains(filterText) || e.Icon.Contains(filterText) || e.Target.Contains(filterText) || e.ElementId.Contains(filterText) || e.CssClass.Contains(filterText) || e.Permission.Contains(filterText) || e.ResourceTypeName.Contains(filterText))
@@ -179,7 +181,8 @@ namespace JS.Abp.DynamicMenu.EntityFrameworkCore
                     .WhereIf(!string.IsNullOrWhiteSpace(elementId), e => e.ElementId.Contains(elementId))
                     .WhereIf(!string.IsNullOrWhiteSpace(cssClass), e => e.CssClass.Contains(cssClass))
                     .WhereIf(!string.IsNullOrWhiteSpace(permission), e => e.Permission.Contains(permission))
-                    .WhereIf(!string.IsNullOrWhiteSpace(resourceTypeName), e => e.ResourceTypeName.Contains(resourceTypeName));
+                    .WhereIf(!string.IsNullOrWhiteSpace(resourceTypeName), e => e.ResourceTypeName.Contains(resourceTypeName))
+                    .WhereIf(parentId.HasValue, e => e.ParentId == parentId);
         }
     }
 }

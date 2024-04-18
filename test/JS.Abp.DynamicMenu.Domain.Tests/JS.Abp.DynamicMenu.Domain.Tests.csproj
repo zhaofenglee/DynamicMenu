@@ -4,12 +4,17 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
     <RootNamespace>JS.Abp.DynamicMenu</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
-    <ProjectReference Include="..\JS.Abp.DynamicMenu.EntityFrameworkCore.Tests\JS.Abp.DynamicMenu.EntityFrameworkCore.Tests.csproj" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\JS.Abp.DynamicMenu.Domain\JS.Abp.DynamicMenu.Domain.csproj" />
+    <ProjectReference Include="..\JS.Abp.DynamicMenu.TestBase\JS.Abp.DynamicMenu.TestBase.csproj" />
   </ItemGroup>
 
 </Project>

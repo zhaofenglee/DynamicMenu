@@ -1,0 +1,72 @@
+@page
+@using Microsoft.AspNetCore.Mvc.Localization
+@using JS.Abp.DynamicMenu.Localization
+@using JS.Abp.DynamicMenu.Web.Pages.DynamicMenu.MenuItems
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal
+@using JS.Abp.DynamicMenu.MenuItems;
+@using System.Globalization
+@inject IHtmlLocalizer<DynamicMenuResource> L
+@model EditModalModel
+@{
+    Layout = null;
+}
+
+<form data-ajaxForm="true" asp-page="/DynamicMenu/MenuItems/EditModal" autocomplete="off">
+    <abp-modal id="MenuItemEditModal">
+        <abp-modal-header title="@L["Update"].Value"></abp-modal-header>
+
+        <abp-modal-body>
+
+            <abp-select asp-for="MenuItem.ParentId" asp-items="@Model.MenuItemsList" label="MenuItem"/>
+            
+            <abp-input asp-for="Id" />
+                    
+                    <abp-input asp-for="MenuItem.ConcurrencyStamp" hidden="true" suppress-label="true"/>
+                    
+
+            <abp-input asp-for="MenuItem.Name"   />
+
+
+            <abp-input asp-for="MenuItem.DisplayName"   />
+
+
+            <abp-input asp-for="MenuItem.IsActive"   />
+
+
+            <abp-input asp-for="MenuItem.Url"   />
+
+
+            <abp-input asp-for="MenuItem.Icon"   />
+
+
+            <abp-input asp-for="MenuItem.Order"   />
+
+
+            <abp-input asp-for="MenuItem.Target"   />
+
+
+            <abp-input asp-for="MenuItem.ElementId"   />
+
+
+            <abp-input asp-for="MenuItem.CssClass"   />
+
+
+            @* <abp-input asp-for="MenuItem.Permission"   /> *@
+            <abp-select asp-for="MenuItem.Permission" asp-items="@Model.AbpPolicyNames" label="Permission"/>
+
+            <abp-input asp-for="MenuItem.ResourceTypeName"   />
+
+
+            
+
+                    
+                
+
+
+        </abp-modal-body>
+
+        <abp-modal-footer buttons="@(AbpModalButtons.Cancel|AbpModalButtons.Save)">
+
+        </abp-modal-footer>
+    </abp-modal>
+</form>

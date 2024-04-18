@@ -34,9 +34,10 @@ public class DynamicMenuWebModule : AbpModule
 
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
+        var configuration = context.Services.GetConfiguration();
         Configure<AbpNavigationOptions>(options =>
         {
-            options.MenuContributors.Add(new DynamicMenuMenuContributor());
+            options.MenuContributors.Add(new DynamicMenuMenuContributor(configuration));
         });
 
         Configure<AbpVirtualFileSystemOptions>(options =>

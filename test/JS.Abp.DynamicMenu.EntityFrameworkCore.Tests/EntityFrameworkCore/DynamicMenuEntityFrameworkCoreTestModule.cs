@@ -5,18 +5,21 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore.Sqlite;
 using Volo.Abp.Modularity;
+using Volo.Abp.Uow;
 
 namespace JS.Abp.DynamicMenu.EntityFrameworkCore;
 
 [DependsOn(
-    typeof(DynamicMenuTestBaseModule),
+    typeof(DynamicMenuApplicationTestModule),
     typeof(DynamicMenuEntityFrameworkCoreModule),
     typeof(AbpEntityFrameworkCoreSqliteModule)
-    )]
+)]
 public class DynamicMenuEntityFrameworkCoreTestModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
+        context.Services.AddAlwaysDisableUnitOfWorkTransaction();
+
         var sqliteConnection = CreateDatabaseAndGetConnection();
 
         Configure<AbpDbContextOptions>(options =>
