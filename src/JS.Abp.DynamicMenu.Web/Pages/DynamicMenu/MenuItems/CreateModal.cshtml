@@ -47,8 +47,8 @@
 
             <abp-input asp-for="MenuItem.CssClass"   />
 
-
-            <abp-input asp-for="MenuItem.Permission"   />
+            <abp-select asp-for="MenuItem.Permission" asp-items="@Model.AbpPolicyNames" label="Permission"/>
+            @*<abp-input asp-for="MenuItem.Permission"   />*@
 
 
             <abp-input asp-for="MenuItem.ResourceTypeName"   />

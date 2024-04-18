@@ -22,11 +22,13 @@ namespace JS.Abp.DynamicMenu.Web.Pages.DynamicMenu.MenuItems
         protected IMenuItemsAppService _menuItemsAppService;
         public List<SelectListItem> MenuItemsList { get; set; }
 
+        public List<SelectListItem> AbpPolicyNames { get; set; }
         public CreateModalModel(IMenuItemsAppService menuItemsAppService)
         {
             _menuItemsAppService = menuItemsAppService;
             MenuItemsList = new();
             MenuItem = new();
+            AbpPolicyNames = new();
         }
 
         public virtual async Task OnGetAsync()
@@ -37,6 +39,8 @@ namespace JS.Abp.DynamicMenu.Web.Pages.DynamicMenu.MenuItems
                 .Items.Select(x => new SelectListItem(x.Name, x.Id.ToString()))
                 .ToList());
             MenuItem.ParentId = ParentId;
+            AbpPolicyNames.Add(new SelectListItem("",null));
+            AbpPolicyNames.AddRange((await _menuItemsAppService.GetPoliciesNamesAsync()).Select(x=> new SelectListItem(x,x)).ToList());
             await Task.CompletedTask;
         }
 
