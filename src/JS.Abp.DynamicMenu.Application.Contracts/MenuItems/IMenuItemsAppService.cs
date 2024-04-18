@@ -13,8 +13,9 @@ namespace JS.Abp.DynamicMenu.MenuItems
     {
         Task<ListResultDto<MenuItemDto>> GetListAsync();
 
-        Task<PagedResultDto<MenuItemWithNavigationPropertiesDto>> GetPageLookupAsync(GetMenuItemsInput input);
-        Task<MenuItemWithNavigationPropertiesDto> GetWithNavigationPropertiesAsync(Guid id);
+        Task<PagedResultDto<MenuItemDto>> GetPageLookupAsync(GetMenuItemsInput input);
+        
+        Task<List<MenuItemTreeDto>> GetTreeAsync(string? parentId = null);
 
         Task<MenuItemDto> GetAsync(Guid id);
 
