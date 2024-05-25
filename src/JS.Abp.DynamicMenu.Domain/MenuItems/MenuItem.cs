@@ -22,28 +22,21 @@ namespace JS.Abp.DynamicMenu.MenuItems
 
         public virtual bool IsActive { get; set; }
 
-        [CanBeNull]
-        public virtual string Url { get; set; }
+        public virtual string? Url { get; set; }
 
-        [CanBeNull]
-        public virtual string Icon { get; set; }
+        public virtual string? Icon { get; set; }
 
         public virtual int Order { get; set; }
 
-        [CanBeNull]
-        public virtual string Target { get; set; }
+        public virtual string? Target { get; set; }
 
-        [CanBeNull]
-        public virtual string ElementId { get; set; }
+        public virtual string? ElementId { get; set; }
 
-        [CanBeNull]
-        public virtual string CssClass { get; set; }
+        public virtual string? CssClass { get; set; }
 
-        [CanBeNull]
-        public virtual string Permission { get; set; }
+        public virtual string? Permission { get; set; }
 
-        [CanBeNull]
-        public virtual string ResourceTypeName { get; set; }
+        public virtual string? ResourceTypeName { get; set; }
         public Guid? ParentId { get; set; }
 
         public MenuItem()

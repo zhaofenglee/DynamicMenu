@@ -8,6 +8,7 @@
     <IsPackable>true</IsPackable>
     <OutputType>Library</OutputType>
     <RootNamespace>JS.Abp.DynamicMenu.Web</RootNamespace>
+    <Nullable>enable</Nullable>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
   </PropertyGroup>
 

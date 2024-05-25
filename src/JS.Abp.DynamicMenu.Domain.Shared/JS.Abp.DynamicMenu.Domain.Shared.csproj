@@ -5,6 +5,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>JS.Abp.DynamicMenu</RootNamespace>
+    <Nullable>enable</Nullable>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
