@@ -35,6 +35,9 @@
     "MinOrder": "Min Order",
     "MaxOrder": "Max Order",
     "MenuItem": "菜单项目",
-    "EditSub": "编辑子项"
+    "EditSub": "编辑子项",
+    "Cancel": "取消",
+    "Edit": "编辑",
+    "Delete": "删除"
   }
 }
