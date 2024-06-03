@@ -50,7 +50,7 @@ public class DynamicMenuMenuContributor : IMenuContributor
     {
         var l = context.GetLocalizer<DynamicMenuResource>();
         var dynamicMenuEnabled = _configuration["App:DisableDynamicMenu"];
-        if (dynamicMenuEnabled.IsNullOrWhiteSpace() || bool.Parse(dynamicMenuEnabled))
+        if (dynamicMenuEnabled.IsNullOrWhiteSpace() || !bool.Parse(dynamicMenuEnabled))
         {
             var menuAppService = context.ServiceProvider.GetRequiredService<IMenuItemsAppService>();
 
