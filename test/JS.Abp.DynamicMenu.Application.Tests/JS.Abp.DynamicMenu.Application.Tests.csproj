@@ -11,9 +11,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\JS.Abp.DynamicMenu.Application\JS.Abp.DynamicMenu.Application.csproj" />
     <ProjectReference Include="..\JS.Abp.DynamicMenu.Domain.Tests\JS.Abp.DynamicMenu.Domain.Tests.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
   </ItemGroup>
 

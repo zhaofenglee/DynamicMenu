@@ -184,6 +184,7 @@ namespace JS.Abp.DynamicMenu.Blazor.Pages.DynamicMenu
 
                 await MenuItemsAppService.CreateAsync(NewMenuItem);
                 await GetMenuItemsAsync();
+                await GetTreesAsync();
                 await CloseCreateMenuItemModalAsync();
             }
             catch (Exception ex)
@@ -208,6 +209,7 @@ namespace JS.Abp.DynamicMenu.Blazor.Pages.DynamicMenu
 
                 await MenuItemsAppService.UpdateAsync(EditingMenuItemId, EditingMenuItem);
                 await GetMenuItemsAsync();
+                await GetTreesAsync();
                 await EditMenuItemModal.Hide();                
             }
             catch (Exception ex)
