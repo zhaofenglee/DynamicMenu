@@ -10,7 +10,7 @@ export const environment = {
     logoUrl: '',
   },
   oAuthConfig: {
-    issuer: 'https://localhost:44348/',
+    issuer: 'https://localhost:44316/',
     redirectUri: baseUrl,
     clientId: 'DynamicMenu_App',
     responseType: 'code',
@@ -19,11 +19,11 @@ export const environment = {
   },
   apis: {
     default: {
-      url: 'https://localhost:44348',
+      url: 'https://localhost:44316',
       rootNamespace: 'JS.Abp.DynamicMenu',
     },
     DynamicMenu: {
-      url: 'https://localhost:44386',
+      url: 'https://localhost:44315',
       rootNamespace: 'JS.Abp.DynamicMenu',
     },
   },
