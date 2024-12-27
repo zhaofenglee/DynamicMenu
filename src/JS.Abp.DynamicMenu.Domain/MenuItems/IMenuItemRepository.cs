@@ -23,6 +23,7 @@ namespace JS.Abp.DynamicMenu.MenuItems
                     string? permission = null,
                     string? resourceTypeName = null,
                     Guid? parentId = null,
+                    string? component = null,
                     string? sorting = null,
                     int maxResultCount = int.MaxValue,
                     int skipCount = 0,
@@ -44,6 +45,7 @@ namespace JS.Abp.DynamicMenu.MenuItems
             string? permission = null,
             string? resourceTypeName = null,
             Guid? parentId = null,
+            string? component = null,
             CancellationToken cancellationToken = default);
     }
 }

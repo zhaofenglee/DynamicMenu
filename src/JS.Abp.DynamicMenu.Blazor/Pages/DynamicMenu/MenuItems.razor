@@ -366,7 +366,16 @@
                     </Validation>
 
 
-                   
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Component"]</FieldLabel>
+                            <TextEdit @bind-Text="@NewMenuItem.Component" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
 
 
                     
@@ -545,7 +554,16 @@
                         </Field>
                     </Validation>
 
-
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Component"]</FieldLabel>
+                            <TextEdit @bind-Text="@EditingMenuItem.Component" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
                  
 
 
