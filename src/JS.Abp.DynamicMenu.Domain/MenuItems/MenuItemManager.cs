@@ -19,11 +19,11 @@ namespace JS.Abp.DynamicMenu.MenuItems
         }
 
         public async Task<MenuItem> CreateAsync(
-        Guid? parentId, string name, string displayName, bool isActive, string url, string icon, int order, string target, string elementId, string cssClass, string permission, string resourceTypeName)
+        Guid? parentId, string name, string displayName, bool isActive, string url, string icon, int order, string target, string elementId, string cssClass, string permission, string resourceTypeName,string? component = null)
         {
             var menuItem = new MenuItem(
              GuidGenerator.Create(),
-             parentId, name, displayName, isActive, url, icon, order, target, elementId, cssClass, permission, resourceTypeName
+             parentId, name, displayName, isActive, url, icon, order, target, elementId, cssClass, permission, resourceTypeName,component
              );
 
             return await _menuItemRepository.InsertAsync(menuItem);
@@ -31,7 +31,7 @@ namespace JS.Abp.DynamicMenu.MenuItems
 
         public async Task<MenuItem> UpdateAsync(
             Guid id,
-            Guid? parentId, string name, string displayName, bool isActive, string url, string icon, int order, string target, string elementId, string cssClass, string permission, string resourceTypeName, [CanBeNull] string concurrencyStamp = null
+            Guid? parentId, string name, string displayName, bool isActive, string url, string icon, int order, string target, string elementId, string cssClass, string permission, string resourceTypeName,string? component = null, [CanBeNull] string concurrencyStamp = null
         )
         {
             var queryable = await _menuItemRepository.GetQueryableAsync();
@@ -51,6 +51,7 @@ namespace JS.Abp.DynamicMenu.MenuItems
             menuItem.CssClass = cssClass;
             menuItem.Permission = permission;
             menuItem.ResourceTypeName = resourceTypeName;
+            menuItem.Component = component;
 
             menuItem.SetConcurrencyStampIfNotNull(concurrencyStamp);
             return await _menuItemRepository.UpdateAsync(menuItem);

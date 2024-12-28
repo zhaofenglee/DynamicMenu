@@ -29,6 +29,7 @@ public static class DynamicMenuDbContextModelCreatingExtensions
                 b.Property(x => x.CssClass).HasColumnName(nameof(MenuItem.CssClass));
                 b.Property(x => x.Permission).HasColumnName(nameof(MenuItem.Permission));
                 b.Property(x => x.ResourceTypeName).HasColumnName(nameof(MenuItem.ResourceTypeName));
+                b.Property(x=>x.Component).HasColumnName(nameof(MenuItem.Component)).HasMaxLength(MenuItemConsts.ComponentMaxLength);
                 b.HasOne<MenuItem>().WithMany().HasForeignKey(x => x.ParentId).OnDelete(DeleteBehavior.NoAction);
             });
 

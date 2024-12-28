@@ -33,12 +33,13 @@ namespace JS.Abp.DynamicMenu.MenuItems
             string? permission = null,
             string? resourceTypeName = null,
             Guid? parentId = null,
+            string? component = null,
             string? sorting = null,
             int maxResultCount = int.MaxValue,
             int skipCount = 0,
             CancellationToken cancellationToken = default)
         {
-            var query = ApplyFilter((await GetMongoQueryableAsync(cancellationToken)), filterText, name, displayName, isActive, url, icon, orderMin, orderMax, target, elementId, cssClass, permission, resourceTypeName, parentId);
+            var query = ApplyFilter((await GetMongoQueryableAsync(cancellationToken)), filterText, name, displayName, isActive, url, icon, orderMin, orderMax, target, elementId, cssClass, permission, resourceTypeName, parentId,component);
             query = query.OrderBy(string.IsNullOrWhiteSpace(sorting) ? MenuItemConsts.GetDefaultSorting(false) : sorting);
             return await query.As<IMongoQueryable<MenuItem>>()
                 .PageBy<MenuItem, IMongoQueryable<MenuItem>>(skipCount, maxResultCount)
@@ -60,9 +61,10 @@ namespace JS.Abp.DynamicMenu.MenuItems
             string? permission = null,
             string? resourceTypeName = null,
             Guid? parentId = null,
+            string? component = null,
             CancellationToken cancellationToken = default)
         {
-            var query = ApplyFilter((await GetMongoQueryableAsync(cancellationToken)), filterText, name, displayName, isActive, url, icon, orderMin, orderMax, target, elementId, cssClass, permission, resourceTypeName, parentId);
+            var query = ApplyFilter((await GetMongoQueryableAsync(cancellationToken)), filterText, name, displayName, isActive, url, icon, orderMin, orderMax, target, elementId, cssClass, permission, resourceTypeName, parentId,component);
             return await query.As<IMongoQueryable<MenuItem>>().LongCountAsync(GetCancellationToken(cancellationToken));
         }
 
@@ -81,10 +83,11 @@ namespace JS.Abp.DynamicMenu.MenuItems
             string? cssClass = null,
             string? permission = null,
             string? resourceTypeName = null,
-            Guid? parentId = null)
+            Guid? parentId = null,
+            string? component = null)
         {
             return query
-                .WhereIf(!string.IsNullOrWhiteSpace(filterText), e => e.Name!.Contains(filterText!) || e.DisplayName!.Contains(filterText!) || e.Url!.Contains(filterText!) || e.Icon!.Contains(filterText!) || e.Target!.Contains(filterText!) || e.ElementId!.Contains(filterText!) || e.CssClass!.Contains(filterText!) || e.Permission!.Contains(filterText!) || e.ResourceTypeName!.Contains(filterText!))
+                .WhereIf(!string.IsNullOrWhiteSpace(filterText), e => e.Name!.Contains(filterText!) || e.DisplayName!.Contains(filterText!) || e.Url!.Contains(filterText!) || e.Icon!.Contains(filterText!) || e.Target!.Contains(filterText!) || e.ElementId!.Contains(filterText!) || e.CssClass!.Contains(filterText!) || e.Permission!.Contains(filterText!) || e.ResourceTypeName!.Contains(filterText!)|| e.Component!.Contains(filterText!))
                     .WhereIf(!string.IsNullOrWhiteSpace(name), e => e.Name.Contains(name))
                     .WhereIf(!string.IsNullOrWhiteSpace(displayName), e => e.DisplayName.Contains(displayName))
                     .WhereIf(isActive.HasValue, e => e.IsActive == isActive)
@@ -97,7 +100,8 @@ namespace JS.Abp.DynamicMenu.MenuItems
                     .WhereIf(!string.IsNullOrWhiteSpace(cssClass), e => e.CssClass.Contains(cssClass))
                     .WhereIf(!string.IsNullOrWhiteSpace(permission), e => e.Permission.Contains(permission))
                     .WhereIf(!string.IsNullOrWhiteSpace(resourceTypeName), e => e.ResourceTypeName.Contains(resourceTypeName))
-                    .WhereIf(parentId.HasValue, e => e.ParentId == parentId);
+                    .WhereIf(parentId.HasValue, e => e.ParentId == parentId)
+                    .WhereIf(!string.IsNullOrWhiteSpace(component), e => e.Component.Contains(component));
         }
     }
 }

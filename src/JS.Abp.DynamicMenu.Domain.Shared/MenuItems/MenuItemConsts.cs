@@ -14,5 +14,6 @@ namespace JS.Abp.DynamicMenu.MenuItems
         public const int DisplayNameMinLength = 1;
         public const int DisplayNameMaxLength = 50;
         public const int IconMaxLength = 50;
+        public const int ComponentMaxLength = 255;
     }
 }

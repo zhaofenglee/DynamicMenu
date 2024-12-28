@@ -39,12 +39,13 @@ namespace JS.Abp.DynamicMenu.MenuItems
         public virtual string? ResourceTypeName { get; set; }
         public Guid? ParentId { get; set; }
 
+        public virtual string? Component { get; set; } 
         public MenuItem()
         {
 
         }
 
-        public MenuItem(Guid id, Guid? parentId, string name, string displayName, bool isActive, string url, string icon, int order, string target, string elementId, string cssClass, string permission, string resourceTypeName)
+        public MenuItem(Guid id, Guid? parentId, string name, string displayName, bool isActive, string url, string icon, int order, string target, string elementId, string cssClass, string permission, string resourceTypeName,string? component = null)
         {
 
             Id = id;
@@ -53,6 +54,7 @@ namespace JS.Abp.DynamicMenu.MenuItems
             Check.NotNull(displayName, nameof(displayName));
             Check.Length(displayName, nameof(displayName), MenuItemConsts.DisplayNameMaxLength, MenuItemConsts.DisplayNameMinLength);
             Check.Length(icon, nameof(icon), MenuItemConsts.IconMaxLength, 0);
+            Check.Length(component, nameof(component), MenuItemConsts.ComponentMaxLength, 0);
             Name = name;
             DisplayName = displayName;
             IsActive = isActive;
@@ -65,6 +67,7 @@ namespace JS.Abp.DynamicMenu.MenuItems
             Permission = permission;
             ResourceTypeName = resourceTypeName;
             ParentId = parentId;
+            Component = component;
         }
 
     }
