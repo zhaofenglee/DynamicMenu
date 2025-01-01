@@ -146,7 +146,8 @@ $(function () {
 			{ data: "elementId" },
 			{ data: "cssClass" },
 			{ data: "permission" },
-			{ data: "resourceTypeName" }
+			{ data: "resourceTypeName" },
+            { data: "component" }
 			        
     ];
     
@@ -168,11 +169,13 @@ $(function () {
     
 
     createModal.onResult(function () {
-        dataTable.ajax.reloadEx();;
+        dataTable.ajax.reloadEx();
+        $('#DirectoryTree').jstree("refresh");
     });
 
     editModal.onResult(function () {
-        dataTable.ajax.reloadEx();;
+        dataTable.ajax.reloadEx();
+        $('#DirectoryTree').jstree("refresh");
     });
 
     $("#NewMenuItemButton").click(function (e) {
