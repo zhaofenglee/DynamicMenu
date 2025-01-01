@@ -13,10 +13,9 @@ namespace JS.Abp.DynamicMenu.Web.Menus;
 
 public class DynamicMenuMenuContributor : IMenuContributor
 {
-    private readonly IConfiguration _configuration;
-    public DynamicMenuMenuContributor(IConfiguration configuration)
+    public DynamicMenuMenuContributor()
     {
-        _configuration = configuration;
+
     }
     
     public async Task ConfigureMenuAsync(MenuConfigurationContext context)
@@ -24,7 +23,6 @@ public class DynamicMenuMenuContributor : IMenuContributor
         if (context.Menu.Name == StandardMenus.Main)
         {
             await ConfigureMainMenuAsync(context);
-            await AddDynamicMenuManagementMenuItemAsync(context);
         }
     }
 
@@ -43,90 +41,6 @@ public class DynamicMenuMenuContributor : IMenuContributor
                 requiredPermissionName: DynamicMenuPermissions.MenuItems.Default)
         );
         return Task.CompletedTask;
-    }
-    
-    protected virtual async Task AddDynamicMenuManagementMenuItemAsync(MenuConfigurationContext context)
-    {
-        var l = context.GetLocalizer<DynamicMenuResource>();
-        var dynamicMenuEnabled = _configuration["App:DisableDynamicMenu"];
-        if (string.IsNullOrWhiteSpace(dynamicMenuEnabled) || bool.Parse(dynamicMenuEnabled))
-        {
-            var menuAppService = context.ServiceProvider.GetRequiredService<IMenuItemsAppService>();
-
-            var menuItems = await menuAppService.GetListAsync();
-        
-            if (menuItems.Items.Count > 0)
-            {
-                foreach (var menuItemDto in menuItems.Items.Where(x => x.ParentId == null && x.IsActive).OrderBy(x => x.Order)
-                             .ThenBy(x => x.Name))
-                {
-               
-                    var menuItem = context.Menu.FindMenuItem(menuItemDto.Name);
-                    if (menuItem==null)
-                    {
-                        AddChildItems(menuItemDto, menuItems.Items.ToList(), l, context.Menu);
-                    }
-                    else
-                    {
-                        if (!string.IsNullOrWhiteSpace(menuItemDto.Url))
-                        {
-                            menuItem.Url = menuItemDto.Url;
-                        }
-                        if (!string.IsNullOrWhiteSpace(menuItemDto.Icon))
-                        {
-                            menuItem.Icon = menuItemDto.Icon;
-                        }
-                        menuItem.Order = menuItemDto.Order;
-                    }
-                }
-            }
-        }
-       
-    }
-
-    private void AddChildItems(MenuItemDto menuItem, List<MenuItemDto> source, IStringLocalizer localizer, IHasMenuItems parent = null)
-    {
-        menuItem.DisplayName = localizer[menuItem.DisplayName];
-        var applicationMenuItem = CreateApplicationMenuItem(menuItem);
-
-        foreach (var item in source.Where(x => x.ParentId == menuItem.Id && x.IsActive).OrderBy(x => x.Order)
-                     .ThenBy(x => x.Name))
-        {
-            AddChildItems(item, source, localizer, applicationMenuItem);
-        }
-
-        parent?.Items.Add(applicationMenuItem);
-    }
-    private ApplicationMenuItem CreateApplicationMenuItem(MenuItemDto menuItem)
-    {
-        if (string.IsNullOrWhiteSpace(menuItem.Permission))
-        {
-            return new ApplicationMenuItem(
-            menuItem.Name,
-            menuItem.DisplayName,
-            menuItem.Url,
-            menuItem.Icon,
-            menuItem.Order,
-            menuItem.Target,
-            menuItem.ElementId,
-            menuItem.CssClass
-        );
-        }
-        else
-        {
-            return new ApplicationMenuItem(
-           menuItem.Name,
-           menuItem.DisplayName,
-           menuItem.Url,
-           menuItem.Icon,
-           menuItem.Order,
-           menuItem.Target,
-           menuItem.ElementId,
-           menuItem.CssClass,
-           requiredPermissionName: menuItem.Permission
-       );
-        }
-
     }
 
 }
