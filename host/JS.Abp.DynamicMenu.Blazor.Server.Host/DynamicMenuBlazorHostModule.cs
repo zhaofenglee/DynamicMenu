@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Blazorise.Bootstrap5;
 using Blazorise.Icons.FontAwesome;
+using JS.Abp.DynamicMenu.Blazor.Menus;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,7 +12,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using JS.Abp.DynamicMenu.Blazor.Server.Host.Components;
-using JS.Abp.DynamicMenu.Blazor.Server.Host.Menus;
 using JS.Abp.DynamicMenu.EntityFrameworkCore;
 using JS.Abp.DynamicMenu.Localization;
 using JS.Abp.DynamicMenu.MultiTenancy;
@@ -54,6 +54,7 @@ using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using Volo.Abp.UI.Navigation;
 using Volo.Abp.UI.Navigation.Urls;
 using Volo.Abp.VirtualFileSystem;
+using DynamicMenuMenuContributor = JS.Abp.DynamicMenu.Blazor.Server.Host.Menus.DynamicMenuMenuContributor;
 
 namespace JS.Abp.DynamicMenu.Blazor.Server.Host;
 
@@ -217,6 +218,8 @@ public class DynamicMenuBlazorHostModule : AbpModule
         Configure<AbpNavigationOptions>(options =>
         {
             options.MenuContributors.Add(new DynamicMenuMenuContributor());
+            //If you need to use a dynamic menu, please add it.
+            options.MenuContributors.Add(new DynamicMenuContributor());
         });
 
         Configure<AbpRouterOptions>(options =>

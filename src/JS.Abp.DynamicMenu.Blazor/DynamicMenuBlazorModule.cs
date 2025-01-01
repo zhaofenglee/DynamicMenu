@@ -29,7 +29,7 @@ public class DynamicMenuBlazorModule : AbpModule
 
         Configure<AbpNavigationOptions>(options =>
         {
-            options.MenuContributors.Add(new DynamicMenuMenuContributor(configuration));
+            options.MenuContributors.Add(new DynamicMenuMenuContributor());
         });
 
         Configure<AbpRouterOptions>(options =>
