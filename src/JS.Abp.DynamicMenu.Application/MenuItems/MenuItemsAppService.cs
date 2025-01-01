@@ -187,6 +187,49 @@ namespace JS.Abp.DynamicMenu.MenuItems
             var dynamicPermissions = await PermissionDefinition.GetPermissionsAsync();
             return dynamicPermissions.Select(p => p.Name).ToList();
         }
+        [AllowAnonymous]
+        public virtual async Task<ListResultDto<MenuItemTreeDto>> GetCurrentUserMenuListAsync(GetCurrentUserMenuInput input)
+        {
+            var item = await _menuItemRepository.GetByNameAsync(name:input.Name!);
+            var nodes = new List<MenuItemTreeDto>();
+            if (item!=null)
+            {
+                if (!(!string.IsNullOrWhiteSpace(item.Permission)&&!await AuthorizationService.IsGrantedAsync(item.Permission)))
+                {
+                    var menuItems = await _menuItemRepository.GetListAsync(isActive:true);
+                    foreach (var menuItem in menuItems.Where(c => c.ParentId == item.Id).OrderBy(c => c.Order))
+                    {
+                        if (!(!string.IsNullOrWhiteSpace(menuItem.Permission) &&
+                              !await AuthorizationService.IsGrantedAsync(menuItem.Permission)))
+                        {
+                            MenuItemTreeDto node = ObjectMapper.Map<MenuItem, MenuItemTreeDto>(menuItem);
+                            await GetChildAsync(node, menuItems);
+                            nodes.Add(node);
+                        }
+                        
+                    }
+                }
+              
+
+                return new ListResultDto<MenuItemTreeDto>(nodes);
+            }
+            return new ListResultDto<MenuItemTreeDto>(nodes);
+        }
+        
+        private async Task GetChildAsync(MenuItemTreeDto parentNode, List<MenuItem> items)
+        {
+            var children = items.Where(x => x.ParentId == parentNode.Id).ToList();
+            foreach (var child in children)
+            {
+                if (!(!string.IsNullOrWhiteSpace(child.Permission)&&!await AuthorizationService.IsGrantedAsync(child.Permission)))
+                {
+                    var childNode = ObjectMapper.Map<MenuItem, MenuItemTreeDto>(child);
+                    parentNode.Children.Add(childNode);
+                    await GetChildAsync(childNode, items);
+                }
+               
+            }
+        }
 
         public async Task<ListResultDto<MenuItemDto>> GetListAsync()
         {

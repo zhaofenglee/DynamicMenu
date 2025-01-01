@@ -98,5 +98,11 @@ namespace JS.Abp.DynamicMenu.Controllers.MenuItems
         {
             return _menuItemsAppService.GetPoliciesNamesAsync();
         }
+        [HttpGet]
+        [Route("current-user-menu-list")]
+        public virtual Task<ListResultDto<MenuItemTreeDto>> GetCurrentUserMenuListAsync(GetCurrentUserMenuInput input)
+        {
+            return _menuItemsAppService.GetCurrentUserMenuListAsync(input);
+        }
     }
 }

@@ -107,6 +107,11 @@ namespace JS.Abp.DynamicMenu.EntityFrameworkCore
                     .WhereIf(!string.IsNullOrWhiteSpace(component), e => e.MenuItem.Component.Contains(component));
         }
 
+        public virtual async Task<MenuItem?> GetByNameAsync(string name, CancellationToken cancellationToken = default)
+        {
+            return await (await GetDbSetAsync()).FirstOrDefaultAsync(b => b.Name == name, GetCancellationToken(cancellationToken));
+        }
+
         public async Task<List<MenuItem>> GetListAsync(
             string? filterText = null,
             string? name = null,

@@ -32,5 +32,7 @@ namespace JS.Abp.DynamicMenu.MenuItems
         Task<DownloadTokenResultDto> GetDownloadTokenAsync();
 
         Task<List<string>> GetPoliciesNamesAsync();
+        
+        Task<ListResultDto<MenuItemTreeDto>> GetCurrentUserMenuListAsync(GetCurrentUserMenuInput input);
     }
 }

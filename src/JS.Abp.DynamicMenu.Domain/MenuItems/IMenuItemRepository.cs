@@ -8,6 +8,11 @@ namespace JS.Abp.DynamicMenu.MenuItems
 {
     public interface IMenuItemRepository : IRepository<MenuItem, Guid>
     {
+        Task<MenuItem?> GetByNameAsync(
+            string name,
+            CancellationToken cancellationToken = default
+        );
+        
         Task<List<MenuItem>> GetListAsync(
                     string? filterText = null,
                     string? name = null,
