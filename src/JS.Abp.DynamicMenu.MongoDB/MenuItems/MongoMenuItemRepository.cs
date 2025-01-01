@@ -18,6 +18,13 @@ namespace JS.Abp.DynamicMenu.MenuItems
             : base(dbContextProvider)
         {
         }
+
+        public virtual async Task<MenuItem?> GetByNameAsync(string name, CancellationToken cancellationToken = default)
+        {
+            return await (await GetMongoQueryableAsync(cancellationToken))
+                .FirstOrDefaultAsync(e => e.Name == name, GetCancellationToken(cancellationToken));
+        }
+
         public virtual async Task<List<MenuItem>> GetListAsync(
             string? filterText = null,
             string? name = null,

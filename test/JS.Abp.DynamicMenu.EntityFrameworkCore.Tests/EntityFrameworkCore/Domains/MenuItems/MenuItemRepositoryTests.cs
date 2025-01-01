@@ -44,6 +44,23 @@ namespace JS.Abp.DynamicMenu.EntityFrameworkCore.Domains.MenuItems
                 result.First().Id.ShouldBe(Guid.Parse("8444d238-0865-46ec-b7f9-0f76142ac445"));
             });
         }
+        
+        [Fact]
+        public async Task GetByNameAsync()
+        {
+            // Arrange
+            await WithUnitOfWorkAsync(async () =>
+            {
+                // Act
+                var result = await _menuItemRepository.GetByNameAsync(
+                    name: "05a6aa1455494365b9e8ef32441c297e6c3813a93bdf41bbbd"
+                );
+
+                // Assert
+                result.ShouldNotBe(null);
+                result.Id.ShouldBe(Guid.Parse("8444d238-0865-46ec-b7f9-0f76142ac445"));
+            });
+        }
 
         [Fact]
         public async Task GetCountAsync()
