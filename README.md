@@ -35,6 +35,18 @@ Open a command-line terminal in the directory of the YourProject.EntityFramework
 > dotnet ef database update
 ````
 
+### 5. Add dynamicmenu to your web project
+
+```csharp
+        Configure<AbpNavigationOptions>(options =>
+        {
+            options.MenuContributors.Add(new DynamicMenuMenuContributor());
+            //If you need to use a dynamic menu, please add it.
+            options.MenuContributors.Add(new DynamicMenuContributor());//add
+        });
+```
+
+
 ## Samples
 
 See the [sample projects](https://github.com/zhaofenglee/JS.Abp.DynamicMenu/tree/master/host/JS.Abp.DynamicMenu.Blazor.Host)
