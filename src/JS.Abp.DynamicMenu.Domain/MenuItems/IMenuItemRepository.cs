@@ -8,6 +8,11 @@ namespace JS.Abp.DynamicMenu.MenuItems
 {
     public interface IMenuItemRepository : IRepository<MenuItem, Guid>
     {
+        Task<MenuItem?> GetByNameAsync(
+            string name,
+            CancellationToken cancellationToken = default
+        );
+        
         Task<List<MenuItem>> GetListAsync(
                     string? filterText = null,
                     string? name = null,
@@ -23,6 +28,7 @@ namespace JS.Abp.DynamicMenu.MenuItems
                     string? permission = null,
                     string? resourceTypeName = null,
                     Guid? parentId = null,
+                    string? component = null,
                     string? sorting = null,
                     int maxResultCount = int.MaxValue,
                     int skipCount = 0,
@@ -44,6 +50,7 @@ namespace JS.Abp.DynamicMenu.MenuItems
             string? permission = null,
             string? resourceTypeName = null,
             Guid? parentId = null,
+            string? component = null,
             CancellationToken cancellationToken = default);
     }
 }

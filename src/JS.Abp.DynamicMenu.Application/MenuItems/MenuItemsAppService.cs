@@ -46,8 +46,8 @@ namespace JS.Abp.DynamicMenu.MenuItems
 
         public virtual async Task<PagedResultDto<MenuItemDto>> GetListAsync(GetMenuItemsInput input)
         {
-            var totalCount = await _menuItemRepository.GetCountAsync(input.FilterText, input.Name, input.DisplayName, input.IsActive, input.Url, input.Icon, input.OrderMin, input.OrderMax, input.Target, input.ElementId, input.CssClass, input.Permission, input.ResourceTypeName, input.ParentId);
-            var items = await _menuItemRepository.GetListAsync(input.FilterText, input.Name, input.DisplayName, input.IsActive, input.Url, input.Icon, input.OrderMin, input.OrderMax, input.Target, input.ElementId, input.CssClass, input.Permission, input.ResourceTypeName, input.ParentId, input.Sorting, input.MaxResultCount, input.SkipCount);
+            var totalCount = await _menuItemRepository.GetCountAsync(input.FilterText, input.Name, input.DisplayName, input.IsActive, input.Url, input.Icon, input.OrderMin, input.OrderMax, input.Target, input.ElementId, input.CssClass, input.Permission, input.ResourceTypeName, input.ParentId,input.Component);
+            var items = await _menuItemRepository.GetListAsync(input.FilterText, input.Name, input.DisplayName, input.IsActive, input.Url, input.Icon, input.OrderMin, input.OrderMax, input.Target, input.ElementId, input.CssClass, input.Permission, input.ResourceTypeName, input.ParentId,input.Component, input.Sorting, input.MaxResultCount, input.SkipCount);
 
             return new PagedResultDto<MenuItemDto>
             {
@@ -128,7 +128,7 @@ namespace JS.Abp.DynamicMenu.MenuItems
         {
 
             var menuItem = await _menuItemManager.CreateAsync(
-            input.ParentId, input.Name, input.DisplayName, input.IsActive, input.Url, input.Icon, input.Order, input.Target, input.ElementId, input.CssClass, input.Permission, input.ResourceTypeName
+            input.ParentId, input.Name, input.DisplayName, input.IsActive, input.Url, input.Icon, input.Order, input.Target, input.ElementId, input.CssClass, input.Permission, input.ResourceTypeName,input.Component
             );
 
             return ObjectMapper.Map<MenuItem, MenuItemDto>(menuItem);
@@ -140,7 +140,7 @@ namespace JS.Abp.DynamicMenu.MenuItems
 
             var menuItem = await _menuItemManager.UpdateAsync(
             id,
-            input.ParentId, input.Name, input.DisplayName, input.IsActive, input.Url, input.Icon, input.Order, input.Target, input.ElementId, input.CssClass, input.Permission, input.ResourceTypeName, input.ConcurrencyStamp
+            input.ParentId, input.Name, input.DisplayName, input.IsActive, input.Url, input.Icon, input.Order, input.Target, input.ElementId, input.CssClass, input.Permission, input.ResourceTypeName,input.Component, input.ConcurrencyStamp
             );
 
             return ObjectMapper.Map<MenuItem, MenuItemDto>(menuItem);
@@ -155,7 +155,7 @@ namespace JS.Abp.DynamicMenu.MenuItems
                 throw new AbpAuthorizationException("Invalid download token: " + input.DownloadToken);
             }
 
-            var items = await _menuItemRepository.GetListAsync(input.FilterText, input.Name, input.DisplayName, input.IsActive, input.Url, input.Icon, input.OrderMin, input.OrderMax, input.Target, input.ElementId, input.CssClass, input.Permission, input.ResourceTypeName);
+            var items = await _menuItemRepository.GetListAsync(input.FilterText, input.Name, input.DisplayName, input.IsActive, input.Url, input.Icon, input.OrderMin, input.OrderMax, input.Target, input.ElementId, input.CssClass, input.Permission, input.ResourceTypeName,input.ParentId,input.Component);
 
             var memoryStream = new MemoryStream();
             await memoryStream.SaveAsAsync(ObjectMapper.Map<List<MenuItem>, List<MenuItemExcelDto>>(items));
@@ -187,6 +187,49 @@ namespace JS.Abp.DynamicMenu.MenuItems
             var dynamicPermissions = await PermissionDefinition.GetPermissionsAsync();
             return dynamicPermissions.Select(p => p.Name).ToList();
         }
+        [AllowAnonymous]
+        public virtual async Task<ListResultDto<MenuItemTreeDto>> GetCurrentUserMenuListAsync(GetCurrentUserMenuInput input)
+        {
+            var item = await _menuItemRepository.GetByNameAsync(name:input.Name!);
+            var nodes = new List<MenuItemTreeDto>();
+            if (item!=null)
+            {
+                if (!(!string.IsNullOrWhiteSpace(item.Permission)&&!await AuthorizationService.IsGrantedAsync(item.Permission)))
+                {
+                    var menuItems = await _menuItemRepository.GetListAsync(isActive:true);
+                    foreach (var menuItem in menuItems.Where(c => c.ParentId == item.Id).OrderBy(c => c.Order))
+                    {
+                        if (!(!string.IsNullOrWhiteSpace(menuItem.Permission) &&
+                              !await AuthorizationService.IsGrantedAsync(menuItem.Permission)))
+                        {
+                            MenuItemTreeDto node = ObjectMapper.Map<MenuItem, MenuItemTreeDto>(menuItem);
+                            await GetChildAsync(node, menuItems);
+                            nodes.Add(node);
+                        }
+                        
+                    }
+                }
+              
+
+                return new ListResultDto<MenuItemTreeDto>(nodes);
+            }
+            return new ListResultDto<MenuItemTreeDto>(nodes);
+        }
+        
+        private async Task GetChildAsync(MenuItemTreeDto parentNode, List<MenuItem> items)
+        {
+            var children = items.Where(x => x.ParentId == parentNode.Id).ToList();
+            foreach (var child in children)
+            {
+                if (!(!string.IsNullOrWhiteSpace(child.Permission)&&!await AuthorizationService.IsGrantedAsync(child.Permission)))
+                {
+                    var childNode = ObjectMapper.Map<MenuItem, MenuItemTreeDto>(child);
+                    parentNode.Children.Add(childNode);
+                    await GetChildAsync(childNode, items);
+                }
+               
+            }
+        }
 
         public async Task<ListResultDto<MenuItemDto>> GetListAsync()
         {
@@ -199,8 +242,8 @@ namespace JS.Abp.DynamicMenu.MenuItems
 
         public async Task<PagedResultDto<MenuItemDto>> GetPageLookupAsync(GetMenuItemsInput input)
         {
-            var totalCount = await _menuItemRepository.GetCountAsync(input.FilterText, input.Name, input.DisplayName, input.IsActive, input.Url, input.Icon, input.OrderMin, input.OrderMax, input.Target, input.ElementId, input.CssClass, input.Permission, input.ResourceTypeName, input.ParentId);
-            var items = await _menuItemRepository.GetListAsync(input.FilterText, input.Name, input.DisplayName, input.IsActive, input.Url, input.Icon, input.OrderMin, input.OrderMax, input.Target, input.ElementId, input.CssClass, input.Permission, input.ResourceTypeName, input.ParentId, input.Sorting, input.MaxResultCount, input.SkipCount);
+            var totalCount = await _menuItemRepository.GetCountAsync(input.FilterText, input.Name, input.DisplayName, input.IsActive, input.Url, input.Icon, input.OrderMin, input.OrderMax, input.Target, input.ElementId, input.CssClass, input.Permission, input.ResourceTypeName, input.ParentId,input.Component);
+            var items = await _menuItemRepository.GetListAsync(input.FilterText, input.Name, input.DisplayName, input.IsActive, input.Url, input.Icon, input.OrderMin, input.OrderMax, input.Target, input.ElementId, input.CssClass, input.Permission, input.ResourceTypeName, input.ParentId,input.Component, input.Sorting, input.MaxResultCount, input.SkipCount);
 
             return new PagedResultDto<MenuItemDto>
             {

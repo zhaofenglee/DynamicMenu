@@ -33,6 +33,7 @@
     "Permission": "Permission",
     "ResourceTypeName": "Resource Type Name",
     "MinOrder": "Min Order",
-    "MaxOrder": "Max Order"
+    "MaxOrder": "Max Order",
+    "Component": "Component"
   }
 }

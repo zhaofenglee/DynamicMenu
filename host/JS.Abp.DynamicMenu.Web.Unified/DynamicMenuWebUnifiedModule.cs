@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using JS.Abp.DynamicMenu.EntityFrameworkCore;
 using JS.Abp.DynamicMenu.MultiTenancy;
 using JS.Abp.DynamicMenu.Web;
+using JS.Abp.DynamicMenu.Web.Menus;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Swagger;
 using Volo.Abp;
@@ -40,6 +41,7 @@ using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using Volo.Abp.TenantManagement.Web;
 using Volo.Abp.Threading;
+using Volo.Abp.UI.Navigation;
 using Volo.Abp.VirtualFileSystem;
 
 namespace JS.Abp.DynamicMenu;
@@ -82,7 +84,12 @@ public class DynamicMenuWebUnifiedModule : AbpModule
     {
         var hostingEnvironment = context.Services.GetHostingEnvironment();
         var configuration = context.Services.GetConfiguration();
-
+        //If you need to use a dynamic menu, please add it.
+        Configure<AbpNavigationOptions>(options =>
+        {
+            options.MenuContributors.Add(new DynamicMenuContributor());
+        });
+        
         Configure<AbpDbContextOptions>(options =>
         {
             options.UseSqlServer();

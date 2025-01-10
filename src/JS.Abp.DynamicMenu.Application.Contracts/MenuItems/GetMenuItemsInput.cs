@@ -20,6 +20,8 @@ namespace JS.Abp.DynamicMenu.MenuItems
         public string? Permission { get; set; }
         public string? ResourceTypeName { get; set; }
         public Guid? ParentId { get; set; }
+        
+        public  string? Component { get; set; } 
 
         public GetMenuItemsInput()
         {
