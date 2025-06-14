@@ -61,6 +61,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JS.Abp.DynamicMenu.Blazor.S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JS.Abp.DynamicMenu.Blazor.Host.Client", "host\JS.Abp.DynamicMenu.Blazor.Host.Client\JS.Abp.DynamicMenu.Blazor.Host.Client.csproj", "{C116568E-A208-43CC-A4B5-E571261A521E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JS.Abp.DynamicMenu.Blazor.WebAssembly.Bundling", "src\JS.Abp.DynamicMenu.Blazor.WebAssembly.Bundling\JS.Abp.DynamicMenu.Blazor.WebAssembly.Bundling.csproj", "{AB7BBB43-52DB-41A3-B8D5-E93154BFBE8F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -171,6 +173,10 @@ Global
 		{C116568E-A208-43CC-A4B5-E571261A521E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C116568E-A208-43CC-A4B5-E571261A521E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C116568E-A208-43CC-A4B5-E571261A521E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB7BBB43-52DB-41A3-B8D5-E93154BFBE8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB7BBB43-52DB-41A3-B8D5-E93154BFBE8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB7BBB43-52DB-41A3-B8D5-E93154BFBE8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB7BBB43-52DB-41A3-B8D5-E93154BFBE8F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -202,6 +208,7 @@ Global
 		{F0EE5760-262D-456A-AA7C-E84F484A05F6} = {649A3FFA-182F-4E56-9717-E6A9A2BEC545}
 		{FEA752A1-5B4E-49E9-B1F3-DDC25E41BB52} = {E400416D-2895-4512-9D17-90681EEC7E0A}
 		{C116568E-A208-43CC-A4B5-E571261A521E} = {E400416D-2895-4512-9D17-90681EEC7E0A}
+		{AB7BBB43-52DB-41A3-B8D5-E93154BFBE8F} = {649A3FFA-182F-4E56-9717-E6A9A2BEC545}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BB9B78FB-4F30-1794-15F4-D615ADA46FCA}

@@ -46,10 +46,10 @@ namespace JS.Abp.DynamicMenu.MenuItems
             int skipCount = 0,
             CancellationToken cancellationToken = default)
         {
-            var query = ApplyFilter((await GetMongoQueryableAsync(cancellationToken)), filterText, name, displayName, isActive, url, icon, orderMin, orderMax, target, elementId, cssClass, permission, resourceTypeName, parentId,component);
+            var query = ApplyFilter((await GetQueryableAsync(cancellationToken)), filterText, name, displayName, isActive, url, icon, orderMin, orderMax, target, elementId, cssClass, permission, resourceTypeName, parentId,component);
             query = query.OrderBy(string.IsNullOrWhiteSpace(sorting) ? MenuItemConsts.GetDefaultSorting(false) : sorting);
-            return await query.As<IMongoQueryable<MenuItem>>()
-                .PageBy<MenuItem, IMongoQueryable<MenuItem>>(skipCount, maxResultCount)
+            return await query
+                .PageBy(skipCount, maxResultCount)
                 .ToListAsync(GetCancellationToken(cancellationToken));
         }
 
@@ -71,8 +71,8 @@ namespace JS.Abp.DynamicMenu.MenuItems
             string? component = null,
             CancellationToken cancellationToken = default)
         {
-            var query = ApplyFilter((await GetMongoQueryableAsync(cancellationToken)), filterText, name, displayName, isActive, url, icon, orderMin, orderMax, target, elementId, cssClass, permission, resourceTypeName, parentId,component);
-            return await query.As<IMongoQueryable<MenuItem>>().LongCountAsync(GetCancellationToken(cancellationToken));
+            var query = ApplyFilter((await GetQueryableAsync(cancellationToken)), filterText, name, displayName, isActive, url, icon, orderMin, orderMax, target, elementId, cssClass, permission, resourceTypeName, parentId,component);
+            return await query.LongCountAsync(GetCancellationToken(cancellationToken));
         }
 
         protected virtual IQueryable<MenuItem> ApplyFilter(
