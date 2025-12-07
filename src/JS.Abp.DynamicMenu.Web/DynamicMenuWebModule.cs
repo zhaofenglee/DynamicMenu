@@ -4,18 +4,18 @@ using JS.Abp.DynamicMenu.Localization;
 using JS.Abp.DynamicMenu.Web.Menus;
 using Volo.Abp.AspNetCore.Mvc.Localization;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared;
-using Volo.Abp.AutoMapper;
 using Volo.Abp.Modularity;
 using Volo.Abp.UI.Navigation;
 using Volo.Abp.VirtualFileSystem;
 using JS.Abp.DynamicMenu.Permissions;
+using Volo.Abp.Mapperly;
 
 namespace JS.Abp.DynamicMenu.Web;
 
 [DependsOn(
     typeof(DynamicMenuApplicationContractsModule),
     typeof(AbpAspNetCoreMvcUiThemeSharedModule),
-    typeof(AbpAutoMapperModule)
+    typeof(AbpMapperlyModule)
     )]
 public class DynamicMenuWebModule : AbpModule
 {
@@ -44,12 +44,8 @@ public class DynamicMenuWebModule : AbpModule
         {
             options.FileSets.AddEmbedded<DynamicMenuWebModule>();
         });
-
-        context.Services.AddAutoMapperObjectMapper<DynamicMenuWebModule>();
-        Configure<AbpAutoMapperOptions>(options =>
-        {
-            options.AddMaps<DynamicMenuWebModule>(validate: true);
-        });
+        
+        context.Services.AddMapperlyObjectMapper<DynamicMenuWebModule>();
 
         Configure<RazorPagesOptions>(options =>
         {

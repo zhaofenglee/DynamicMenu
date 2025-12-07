@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { DynamicMenuService } from '../services/dynamic-menu.service';
 
 @Component({
@@ -7,7 +7,7 @@ import { DynamicMenuService } from '../services/dynamic-menu.service';
   styles: [],
 })
 export class DynamicMenuComponent implements OnInit {
-  constructor(private service: DynamicMenuService) {}
+  private service = inject(DynamicMenuService);
 
   ngOnInit(): void {
     this.service.sample().subscribe(console.log);
