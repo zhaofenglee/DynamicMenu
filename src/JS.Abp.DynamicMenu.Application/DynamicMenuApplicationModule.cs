@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Volo.Abp.AutoMapper;
 using Volo.Abp.Modularity;
 using Volo.Abp.Application;
 using Volo.Abp.Caching;
+using Volo.Abp.Mapperly;
 
 namespace JS.Abp.DynamicMenu;
 
@@ -10,17 +10,13 @@ namespace JS.Abp.DynamicMenu;
     typeof(DynamicMenuDomainModule),
     typeof(DynamicMenuApplicationContractsModule),
     typeof(AbpDddApplicationModule),
-    typeof(AbpAutoMapperModule),
+    typeof(AbpMapperlyModule),
     typeof(AbpCachingModule)
     )]
 public class DynamicMenuApplicationModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
-        context.Services.AddAutoMapperObjectMapper<DynamicMenuApplicationModule>();
-        Configure<AbpAutoMapperOptions>(options =>
-        {
-            options.AddMaps<DynamicMenuApplicationModule>(validate: true);
-        });
+        context.Services.AddMapperlyObjectMapper<DynamicMenuApplicationModule>();
     }
 }

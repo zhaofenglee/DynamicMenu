@@ -29,7 +29,6 @@ using Volo.Abp.AspNetCore.Mvc.UI.Theme.Basic;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared;
 using Volo.Abp.AspNetCore.Serilog;
 using Volo.Abp.Autofac;
-using Volo.Abp.AutoMapper;
 using Volo.Abp.Caching;
 using Volo.Abp.Caching.StackExchangeRedis;
 using Volo.Abp.FeatureManagement;
@@ -101,11 +100,11 @@ public class DynamicMenuWebHostModule : AbpModule
         ConfigureCache(configuration);
         ConfigureUrls(configuration);
         ConfigureAuthentication(context, configuration);
-        ConfigureAutoMapper();
         ConfigureVirtualFileSystem(hostingEnvironment);
         ConfigureSwaggerServices(context.Services);
         ConfigureMultiTenancy();
         ConfigureDataProtection(context, configuration, hostingEnvironment);
+        context.Services.AddMapperlyObjectMapper<DynamicMenuWebHostModule>();
     }
 
     private void ConfigureMenu(IConfiguration configuration)
@@ -167,14 +166,6 @@ public class DynamicMenuWebHostModule : AbpModule
                 options.Scope.Add("phone");
                 options.Scope.Add("DynamicMenu");
             });
-    }
-
-    private void ConfigureAutoMapper()
-    {
-        Configure<AbpAutoMapperOptions>(options =>
-        {
-            options.AddMaps<DynamicMenuWebHostModule>();
-        });
     }
 
     private void ConfigureVirtualFileSystem(IWebHostEnvironment hostingEnvironment)
