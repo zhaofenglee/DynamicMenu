@@ -9,7 +9,7 @@ using JS.Abp.DynamicMenu.EntityFrameworkCore;
 using JS.Abp.DynamicMenu.MultiTenancy;
 using JS.Abp.DynamicMenu.Web;
 using JS.Abp.DynamicMenu.Web.Menus;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.Swagger;
 using Volo.Abp;
 using Volo.Abp.Account;

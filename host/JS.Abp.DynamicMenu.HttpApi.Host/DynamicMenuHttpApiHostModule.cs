@@ -12,7 +12,7 @@ using Microsoft.Extensions.Hosting;
 using JS.Abp.DynamicMenu.EntityFrameworkCore;
 using JS.Abp.DynamicMenu.MultiTenancy;
 using StackExchange.Redis;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Volo.Abp;
 using Volo.Abp.AspNetCore.Authentication.JwtBearer;
 using Volo.Abp.AspNetCore.Mvc.UI.MultiTenancy;
