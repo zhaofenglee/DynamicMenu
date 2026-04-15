@@ -1,23 +1,10 @@
 ﻿using JS.Abp.DynamicMenu.Web.Pages.DynamicMenu.MenuItems;
 using JS.Abp.DynamicMenu.MenuItems;
 using Riok.Mapperly.Abstractions;
+using Volo.Abp.Mapperly;
 
 namespace JS.Abp.DynamicMenu.Web;
 
-/// <summary>
-/// Base class for one-way mapping from TSource to TDestination
-/// </summary>
-/// <typeparam name="TSource">Source type</typeparam>
-/// <typeparam name="TDestination">Destination type</typeparam>
-public abstract partial class MapperBase<TSource, TDestination>
-{
-    public abstract TDestination Map(TSource source);
-    public abstract void Map(TSource source, TDestination destination);
-
-    public virtual void AfterMap(TSource source, TDestination destination)
-    {
-    }
-}
 
 [Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class MenuItemDtoToMenuItemUpdateViewModelMapper : MapperBase<MenuItemDto, MenuItemUpdateViewModel>
