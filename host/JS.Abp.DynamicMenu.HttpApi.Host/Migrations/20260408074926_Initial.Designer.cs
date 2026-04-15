@@ -13,8 +13,8 @@ using Volo.Abp.EntityFrameworkCore;
 namespace JS.Abp.DynamicMenu.Migrations
 {
     [DbContext(typeof(DynamicMenuHttpApiHostMigrationsDbContext))]
-    [Migration("20240525064758_add_dynamicmenu_module")]
-    partial class add_dynamicmenu_module
+    [Migration("20260408074926_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -22,7 +22,7 @@ namespace JS.Abp.DynamicMenu.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("_Abp_DatabaseProvider", EfCoreDatabaseProvider.SqlServer)
-                .HasAnnotation("ProductVersion", "8.0.4")
+                .HasAnnotation("ProductVersion", "10.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -32,6 +32,11 @@ namespace JS.Abp.DynamicMenu.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Component")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasColumnName("Component");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
