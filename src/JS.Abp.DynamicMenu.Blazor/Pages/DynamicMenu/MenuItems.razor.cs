@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Blazorise;
+using Blazorise.Components;
 using Blazorise.DataGrid;
 using JS.Abp.DynamicMenu.MenuItems;
 using JS.Abp.DynamicMenu.Permissions;
@@ -41,6 +42,9 @@ namespace JS.Abp.DynamicMenu.Blazor.Pages.DynamicMenu
         private IReadOnlyList<LookupDto<Guid?>> MenuItemsNullable { get; set; } = new List<LookupDto<Guid?>>();
         private string MenuName { get; set; }
         private List<string> AbpPolicyNames  { get; set; } = new List<string>();
+        private List<string> FilteredPolicyNames { get; set; } = new List<string>();
+        private string? NewPermissionSelectedText { get; set; }
+        private string? EditPermissionSelectedText { get; set; }
         List<MenuItemTreeDto> Items { get; set; } = new List<MenuItemTreeDto>();
         MenuItemTreeDto selectedNode = new MenuItemTreeDto();
         public MenuItems()
@@ -139,10 +143,16 @@ namespace JS.Abp.DynamicMenu.Blazor.Pages.DynamicMenu
 
         private async Task OpenCreateMenuItemModalAsync()
         {
+            if (AbpPolicyNames.Count == 0)
+            {
+                await GetNullableMenuItemLookupAsync();
+            }
+
             NewMenuItem = new MenuItemCreateDto{
                 ParentId = selectedNode.Id==Guid.Empty?null:selectedNode.Id
                 
             };
+            NewPermissionSelectedText = NewMenuItem.Permission;
             
             await NewMenuItemValidations.ClearAll();
             await CreateMenuItemModal.Show();
@@ -159,10 +169,16 @@ namespace JS.Abp.DynamicMenu.Blazor.Pages.DynamicMenu
 
         private async Task OpenEditMenuItemModalAsync(MenuItemDto input)
         {
+            if (AbpPolicyNames.Count == 0)
+            {
+                await GetNullableMenuItemLookupAsync();
+            }
+
             var menuItem = await MenuItemsAppService.GetAsync(input.Id);
             
             EditingMenuItemId = menuItem.Id;
             EditingMenuItem = ObjectMapper.Map<MenuItemDto, MenuItemUpdateDto>(menuItem);
+            EditPermissionSelectedText = EditingMenuItem.Permission;
             await EditingMenuItemValidations.ClearAll();
             await EditMenuItemModal.Show();
         }
@@ -232,7 +248,35 @@ namespace JS.Abp.DynamicMenu.Blazor.Pages.DynamicMenu
         private async Task GetNullableMenuItemLookupAsync(string newValue = null)
         {
             AbpPolicyNames = (await MenuItemsAppService.GetPoliciesNamesAsync());
+            FilteredPolicyNames = AbpPolicyNames.ToList();
             MenuItemsNullable = (await MenuItemsAppService.GetMenuItemLookupAsync(new LookupRequestDto { Filter = newValue })).Items;
+        }
+
+        private Task OnPermissionReadDataAsync(AutocompleteReadDataEventArgs e)
+        {
+            if (!e.CancellationToken.IsCancellationRequested)
+            {
+                FilteredPolicyNames = string.IsNullOrEmpty(e.SearchValue)
+                    ? AbpPolicyNames.ToList()
+                    : AbpPolicyNames
+                        .Where(x => x.IndexOf(e.SearchValue, StringComparison.OrdinalIgnoreCase) >= 0)
+                        .ToList();
+            }
+            return Task.CompletedTask;
+        }
+
+        private Task OnNewPermissionValueChangedAsync(string? value)
+        {
+            NewMenuItem.Permission = value;
+            NewPermissionSelectedText = value;
+            return Task.CompletedTask;
+        }
+
+        private Task OnEditPermissionValueChangedAsync(string? value)
+        {
+            EditingMenuItem.Permission = value;
+            EditPermissionSelectedText = value;
+            return Task.CompletedTask;
         }
         
         private async Task OnSelectedNodeChangedAsync()

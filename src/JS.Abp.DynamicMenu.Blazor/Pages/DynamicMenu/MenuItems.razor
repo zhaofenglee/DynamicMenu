@@ -73,10 +73,10 @@
                 <Form id="MenuItemSearchForm" class="mb-3">
                     <Addons>
                         <Addon AddonType="AddonType.Body">
-                            <TextEdit @bind-Text="@Filter.FilterText"
+                            <TextInput @bind-Value="@Filter.FilterText"
                                       Autofocus="true"
                                       Placeholder="@L["Search"]">
-                            </TextEdit>
+                            </TextInput>
                         </Addon>
                         <Addon AddonType="AddonType.End">
                             <SubmitButton Form="MenuItemSearchForm" Clicked="GetMenuItemsAsync">
@@ -104,15 +104,15 @@
                                 <EntityActions TItem="MenuItemDto" EntityActionsColumn="@EntityActionsColumn">
                                     <EntityAction TItem="MenuItemDto"
                                                   Visible="@CanEditMenuItem"
-                                                  Clicked="async () => await OpenEditMenuItemModalAsync(context)"
+                                                  Clicked="async () => await OpenEditMenuItemModalAsync(context.Item)"
                                                   Text="@L["Edit"]"></EntityAction>
                                     @*<EntityAction TItem="MenuItemDto"
                                                   Visible="@CanEditMenuItem"
-                                                  Clicked="async () => await NavigateToSubPage(context.Id)"
+                                                  Clicked="async () => await NavigateToSubPage(context.Item.Id)"
                                                   Text="@L["EditSub"]"></EntityAction>*@
                                     <EntityAction TItem="MenuItemDto"
                                                   Visible="@CanDeleteMenuItem"
-                                                  Clicked="() => DeleteMenuItemAsync(context)"
+                                                  Clicked="() => DeleteMenuItemAsync(context.Item)"
                                                   ConfirmationMessage="@(()=> L["DeleteConfirmationMessage"])"
                                                   Text="@L["Delete"]"></EntityAction>
                                 </EntityActions>
@@ -134,7 +134,7 @@
                                         Field="IsActive"
                                         Caption="@L["IsActive"]">
                             <DisplayTemplate>
-                                @if (context.IsActive)
+                                @if (context.Item.IsActive)
                                 {
                                 <Icon TextColor="TextColor.Success" Name="@IconName.Check" />
                                 }
@@ -210,8 +210,8 @@
 
 
 @* ************************* CREATE MODAL ************************* *@
-<Modal @ref="CreateMenuItemModal" Closing="@CreateMenuItemModal.CancelClosingModalWhenFocusLost">
-    <ModalContent Centered="true">
+<Modal @ref="CreateMenuItemModal" Closing="@CreateMenuItemModal.CancelClosingModalWhenFocusLost" Centered="true">
+    <ModalContent>
         <Form id="CreateMenuItemForm">
             <ModalHeader>
                 <ModalTitle>@L["NewMenuItem"]</ModalTitle>
@@ -225,7 +225,7 @@
                      
                     <Field>
                         <FieldLabel>@L["MenuItem"]</FieldLabel>
-                        <Select TValue="Guid?" @bind-SelectedValue="@NewMenuItem.ParentId">
+                        <Select TValue="Guid?" @bind-Value="@NewMenuItem.ParentId">
                             <SelectItem TValue="Guid?" Value="null"></SelectItem>
                             @foreach (var menuItem in MenuItemsNullable)
                             {
@@ -239,11 +239,11 @@
                     <Validation>
                         <Field>
                             <FieldLabel>@L["Name"] *</FieldLabel>
-                            <TextEdit @bind-Text="@NewMenuItem.Name" MaxLength="MenuItemConsts.NameMaxLength">
+                            <TextInput @bind-Value="@NewMenuItem.Name" MaxLength="MenuItemConsts.NameMaxLength">
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
-                            </TextEdit>
+                            </TextInput>
                         </Field>
                     </Validation>
 
@@ -251,27 +251,27 @@
                     <Validation>
                         <Field>
                             <FieldLabel>@L["DisplayName"] *</FieldLabel>
-                            <TextEdit @bind-Text="@NewMenuItem.DisplayName" MaxLength="MenuItemConsts.DisplayNameMaxLength">
+                            <TextInput @bind-Value="@NewMenuItem.DisplayName" MaxLength="MenuItemConsts.DisplayNameMaxLength">
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
-                            </TextEdit>
+                            </TextInput>
                         </Field>
                     </Validation>
 
 
                     <Field>
-                        <Check TValue="bool" @bind-Checked="@NewMenuItem.IsActive">@L["IsActive"]</Check>
+                        <Check TValue="bool" @bind-Value="@NewMenuItem.IsActive">@L["IsActive"]</Check>
                     </Field>
 
                     <Validation>
                         <Field>
                             <FieldLabel>@L["Url"]</FieldLabel>
-                            <TextEdit @bind-Text="@NewMenuItem.Url" >
+                            <TextInput @bind-Value="@NewMenuItem.Url" >
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
-                            </TextEdit>
+                            </TextInput>
                         </Field>
                     </Validation>
 
@@ -279,11 +279,11 @@
                     <Validation>
                         <Field>
                             <FieldLabel>@L["Icon"]</FieldLabel>
-                            <TextEdit @bind-Text="@NewMenuItem.Icon" MaxLength="MenuItemConsts.IconMaxLength">
+                            <TextInput @bind-Value="@NewMenuItem.Icon" MaxLength="MenuItemConsts.IconMaxLength">
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
-                            </TextEdit>
+                            </TextInput>
                         </Field>
                     </Validation>
 
@@ -303,11 +303,11 @@
                     <Validation>
                         <Field>
                             <FieldLabel>@L["Target"]</FieldLabel>
-                            <TextEdit @bind-Text="@NewMenuItem.Target" >
+                            <TextInput @bind-Value="@NewMenuItem.Target" >
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
-                            </TextEdit>
+                            </TextInput>
                         </Field>
                     </Validation>
 
@@ -315,11 +315,11 @@
                     <Validation>
                         <Field>
                             <FieldLabel>@L["ElementId"]</FieldLabel>
-                            <TextEdit @bind-Text="@NewMenuItem.ElementId" >
+                            <TextInput @bind-Value="@NewMenuItem.ElementId" >
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
-                            </TextEdit>
+                            </TextInput>
                         </Field>
                     </Validation>
 
@@ -327,11 +327,11 @@
                     <Validation>
                         <Field>
                             <FieldLabel>@L["CssClass"]</FieldLabel>
-                            <TextEdit @bind-Text="@NewMenuItem.CssClass" >
+                            <TextInput @bind-Value="@NewMenuItem.CssClass" >
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
-                            </TextEdit>
+                            </TextInput>
                         </Field>
                     </Validation>
 
@@ -345,14 +345,18 @@
                             @*     </Feedback> *@
                             @* </TextEdit> *@
                             <Autocomplete TItem="string"
-                                          TValue="string"
-                                          Data="@AbpPolicyNames"
+                                          TValue="string?"
+                                          Data="@FilteredPolicyNames"
+                                          ReadData="@OnPermissionReadDataAsync"
+                                          TotalItems="@FilteredPolicyNames.Count"
                                           TextField="@(( item ) => item)"
                                           ValueField="@((item) => item)"
-                                          @bind-SelectedValue="NewMenuItem.Permission"
+                                          SelectedValue="@NewMenuItem.Permission"
+                                          SelectedText="@NewPermissionSelectedText"
+                                          SelectedValueChanged="@OnNewPermissionValueChangedAsync"
                                           Placeholder="@L["Search"]"
-                                          Virtualize>
-                                <NotFoundContent> Sorry... @context was not found! :( </NotFoundContent>
+                                          FreeTyping
+                                          MinLength="0">
                             </Autocomplete>
                             
                         </Field>
@@ -362,11 +366,11 @@
                     <Validation>
                         <Field>
                             <FieldLabel>@L["ResourceTypeName"]</FieldLabel>
-                            <TextEdit @bind-Text="@NewMenuItem.ResourceTypeName" >
+                            <TextInput @bind-Value="@NewMenuItem.ResourceTypeName" >
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
-                            </TextEdit>
+                            </TextInput>
                         </Field>
                     </Validation>
 
@@ -374,11 +378,11 @@
                     <Validation>
                         <Field>
                             <FieldLabel>@L["Component"]</FieldLabel>
-                            <TextEdit @bind-Text="@NewMenuItem.Component" >
+                            <TextInput @bind-Value="@NewMenuItem.Component" >
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
-                            </TextEdit>
+                            </TextInput>
                         </Field>
                     </Validation>
 
@@ -399,8 +403,8 @@
 </Modal>
 
 @* ************************* EDIT MODAL ************************* *@
-<Modal @ref="EditMenuItemModal" Closing="@EditMenuItemModal.CancelClosingModalWhenFocusLost">
-    <ModalContent Centered="true">
+<Modal @ref="EditMenuItemModal" Closing="@EditMenuItemModal.CancelClosingModalWhenFocusLost" Centered="true">
+    <ModalContent>
         <Form id="EditMenuItemForm">
             <ModalHeader>
                 <ModalTitle>@L["Update"]</ModalTitle>
@@ -415,7 +419,7 @@
 
                      <Field>
                         <FieldLabel>@L["MenuItem"]</FieldLabel>
-                        <Select TValue="Guid?" @bind-SelectedValue="@EditingMenuItem.ParentId">
+                        <Select TValue="Guid?" @bind-Value="@EditingMenuItem.ParentId">
                             <SelectItem TValue="Guid?" Value="null"></SelectItem>
                             @foreach (var menuItem in MenuItemsNullable)
                             {
@@ -429,11 +433,11 @@
                     <Validation>
                         <Field>
                             <FieldLabel>@L["Name"] *</FieldLabel>
-                            <TextEdit @bind-Text="@EditingMenuItem.Name" MaxLength="MenuItemConsts.NameMaxLength">
+                            <TextInput @bind-Value="@EditingMenuItem.Name" MaxLength="MenuItemConsts.NameMaxLength">
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
-                            </TextEdit>
+                            </TextInput>
                         </Field>
                     </Validation>
 
@@ -441,27 +445,27 @@
                     <Validation>
                         <Field>
                             <FieldLabel>@L["DisplayName"] *</FieldLabel>
-                            <TextEdit @bind-Text="@EditingMenuItem.DisplayName" MaxLength="MenuItemConsts.DisplayNameMaxLength">
+                            <TextInput @bind-Value="@EditingMenuItem.DisplayName" MaxLength="MenuItemConsts.DisplayNameMaxLength">
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
-                            </TextEdit>
+                            </TextInput>
                         </Field>
                     </Validation>
 
 
                     <Field>
-                        <Check TValue="bool" @bind-Checked="@EditingMenuItem.IsActive">@L["IsActive"]</Check>
+                        <Check TValue="bool" @bind-Value="@EditingMenuItem.IsActive">@L["IsActive"]</Check>
                     </Field>
 
                     <Validation>
                         <Field>
                             <FieldLabel>@L["Url"]</FieldLabel>
-                            <TextEdit @bind-Text="@EditingMenuItem.Url" >
+                            <TextInput @bind-Value="@EditingMenuItem.Url" >
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
-                            </TextEdit>
+                            </TextInput>
                         </Field>
                     </Validation>
 
@@ -469,11 +473,11 @@
                     <Validation>
                         <Field>
                             <FieldLabel>@L["Icon"]</FieldLabel>
-                            <TextEdit @bind-Text="@EditingMenuItem.Icon" MaxLength="MenuItemConsts.IconMaxLength">
+                            <TextInput @bind-Value="@EditingMenuItem.Icon" MaxLength="MenuItemConsts.IconMaxLength">
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
-                            </TextEdit>
+                            </TextInput>
                         </Field>
                     </Validation>
 
@@ -493,11 +497,11 @@
                     <Validation>
                         <Field>
                             <FieldLabel>@L["Target"]</FieldLabel>
-                            <TextEdit @bind-Text="@EditingMenuItem.Target" >
+                            <TextInput @bind-Value="@EditingMenuItem.Target" >
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
-                            </TextEdit>
+                            </TextInput>
                         </Field>
                     </Validation>
 
@@ -505,11 +509,11 @@
                     <Validation>
                         <Field>
                             <FieldLabel>@L["ElementId"]</FieldLabel>
-                            <TextEdit @bind-Text="@EditingMenuItem.ElementId" >
+                            <TextInput @bind-Value="@EditingMenuItem.ElementId" >
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
-                            </TextEdit>
+                            </TextInput>
                         </Field>
                     </Validation>
 
@@ -517,11 +521,11 @@
                     <Validation>
                         <Field>
                             <FieldLabel>@L["CssClass"]</FieldLabel>
-                            <TextEdit @bind-Text="@EditingMenuItem.CssClass" >
+                            <TextInput @bind-Value="@EditingMenuItem.CssClass" >
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
-                            </TextEdit>
+                            </TextInput>
                         </Field>
                     </Validation>
 
@@ -535,14 +539,18 @@
                             @*     </Feedback> *@
                             @* </TextEdit> *@
                             <Autocomplete TItem="string"
-                                          TValue="string"
-                                          Data="@AbpPolicyNames"
+                                          TValue="string?"
+                                          Data="@FilteredPolicyNames"
+                                          ReadData="@OnPermissionReadDataAsync"
+                                          TotalItems="@FilteredPolicyNames.Count"
                                           TextField="@(( item ) => item)"
                                           ValueField="@((item) => item)"
-                                          @bind-SelectedValue="EditingMenuItem.Permission"
+                                          SelectedValue="@EditingMenuItem.Permission"
+                                          SelectedText="@EditPermissionSelectedText"
+                                          SelectedValueChanged="@OnEditPermissionValueChangedAsync"
                                           Placeholder="@L["Search"]"
-                                          Virtualize>
-                                <NotFoundContent> Sorry... @context was not found! :( </NotFoundContent>
+                                          FreeTyping
+                                          MinLength="0">
                             </Autocomplete>
                         </Field>
                     </div>
@@ -551,22 +559,22 @@
                     <Validation>
                         <Field>
                             <FieldLabel>@L["ResourceTypeName"]</FieldLabel>
-                            <TextEdit @bind-Text="@EditingMenuItem.ResourceTypeName" >
+                            <TextInput @bind-Value="@EditingMenuItem.ResourceTypeName" >
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
-                            </TextEdit>
+                            </TextInput>
                         </Field>
                     </Validation>
 
                     <Validation>
                         <Field>
                             <FieldLabel>@L["Component"]</FieldLabel>
-                            <TextEdit @bind-Text="@EditingMenuItem.Component" >
+                            <TextInput @bind-Value="@EditingMenuItem.Component" >
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
-                            </TextEdit>
+                            </TextInput>
                         </Field>
                     </Validation>
                  

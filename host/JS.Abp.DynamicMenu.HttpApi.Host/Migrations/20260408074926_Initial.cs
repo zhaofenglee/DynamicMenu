@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace JS.Abp.DynamicMenu.Migrations
 {
     /// <inheritdoc />
-    public partial class add_dynamicmenu_module : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -28,6 +28,7 @@ namespace JS.Abp.DynamicMenu.Migrations
                     Permission = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ResourceTypeName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ParentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Component = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
                     ExtraProperties = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
                     CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
